@@ -2,24 +2,68 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Quick IQ Test</title>
   <style>
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:Arial,Helvetica,sans-serif;background:#f3f4f6;color:#111;display:flex;justify-content:center;padding:2rem}
-    a{text-decoration:none;color:inherit}
-    .card{background:#fff;border-radius:1rem;box-shadow:0 8px 24px rgba(0,0,0,.08);padding:2rem;max-width:720px;width:100%}
-    h1{text-align:center;margin-bottom:1rem;font-size:2rem}
-    p.desc{text-align:center;color:#555;margin-bottom:1.5rem}
-    .question{margin-bottom:1.25rem}
-    .question p{margin-bottom:.5rem;font-weight:600}
-    label{display:block;margin:.25rem 0;cursor:pointer}
-    #submit-btn,button.cta{width:100%;padding:1rem;font-size:1rem;border:none;border-radius:.5rem;background:#2563eb;color:#fff;cursor:pointer;margin-top:1rem}
-    #submit-btn:hover,button.cta:hover{background:#1e40af}
-    .hidden{display:none}
-    #result{margin-top:1.5rem;text-align:center}
-    #result h2{margin-bottom:.5rem;font-size:1.75rem}
-    @media(max-width:600px){body{padding:1rem}.card{padding:1.5rem}}
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9fafb;
+      margin: 0;
+      padding: 2rem;
+      display: flex;
+      justify-content: center;
+    }
+    .card {
+      background: white;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      max-width: 700px;
+      width: 100%;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    p.desc {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: #555;
+    }
+    .question {
+      margin-bottom: 1.5rem;
+    }
+    .question p {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+    label {
+      display: block;
+      margin: 0.25rem 0;
+      cursor: pointer;
+    }
+    button {
+      width: 100%;
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 1rem;
+      font-size: 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+    button:hover {
+      background: #1e40af;
+    }
+    #result {
+      margin-top: 2rem;
+      text-align: center;
+      display: none;
+    }
+    #result h2 {
+      margin-bottom: 0.5rem;
+    }
   </style>
 </head>
 <body>
@@ -28,46 +72,59 @@
     <p class="desc">Answer 10 logic-based questions to estimate your IQ score in under 5 minutes.</p>
     <div id="quiz-container"></div>
     <button id="submit-btn">Submit Answers</button>
-    <div id="result" class="hidden"></div>
+    <div id="result"></div>
   </div>
 
   <script>
-    const questions=[
-      {q:"What comes next in the sequence: 3, 6, 12, 24, ?",options:["30","36","48","54"],answer:"48"},
-      {q:"If some Smibs are Blibs and all Blibs are Cribs, are all Smibs definitely Cribs?",options:["Yes","No","Cannot determine","Only sometimes"],answer:"Cannot determine"},
-      {q:"Find the odd one out: Triangle, Circle, Square, Cylinder",options:["Triangle","Circle","Square","Cylinder"],answer:"Cylinder"},
-      {q:"Which number is missing? 16, 11, 7, 4, ?",options:["2","1","0","-1"],answer:"2"},
-      {q:"Rearrange the letters \"CIFAIPC\" to form the name of a(n)…",options:["City","Animal","Ocean","Country"],answer:"Country"},
-      {q:"A clock shows 3:15. What is the angle between the hour and minute hand?",options:["0°","7.5°","15°","30°"],answer:"7.5°"},
-      {q:"If CAT is coded as 3120, how is DOG coded?",options:["4157","4158","4185","5148"],answer:"4158"},
-      {q:"Which figure completes the pattern? ▲ ▼ ▲ ▼ ?",options:["▲","▼","■","◆"],answer:"▲"},
-      {q:"Find the next prime after 43",options:["47","49","51","53"],answer:"47"},
-      {q:"Five people stand in line. How many different orders are possible?",options:["60","100","120","240"],answer:"120"}
+    const questions = [
+      { q: "What comes next in the sequence: 3, 6, 12, 24, ?", options: ["30", "36", "48", "54"], answer: "48" },
+      { q: "If some Smibs are Blibs and all Blibs are Cribs, are all Smibs definitely Cribs?", options: ["Yes", "No", "Cannot determine", "Only sometimes"], answer: "Cannot determine" },
+      { q: "Find the odd one out: Triangle, Circle, Square, Cylinder", options: ["Triangle", "Circle", "Square", "Cylinder"], answer: "Cylinder" },
+      { q: "Which number is missing? 16, 11, 7, 4, ?", options: ["2", "1", "0", "-1"], answer: "2" },
+      { q: "Rearrange the letters \"CIFAIPC\" to form the name of a(n)…", options: ["City", "Animal", "Ocean", "Country"], answer: "Country" },
+      { q: "A clock shows 3:15. What is the angle between the hour and minute hand?", options: ["0°", "7.5°", "15°", "30°"], answer: "7.5°" },
+      { q: "If CAT is coded as 3120, how is DOG coded?", options: ["4157", "4158", "4185", "5148"], answer: "4158" },
+      { q: "Which figure completes the pattern? ▲ ▼ ▲ ▼ ?", options: ["▲", "▼", "■", "◆"], answer: "▲" },
+      { q: "Find the next prime after 43", options: ["47", "49", "51", "53"], answer: "47" },
+      { q: "Five people stand in line. How many different orders are possible?", options: ["60", "100", "120", "240"], answer: "120" }
     ];
 
-    const quizContainer=document.getElementById('quiz-container');
-    const submitBtn=document.getElementById('submit-btn');
-    const resultBox=document.getElementById('result');
+    const quizContainer = document.getElementById("quiz-container");
+    const submitBtn = document.getElementById("submit-btn");
+    const resultBox = document.getElementById("result");
 
-    questions.forEach((item,idx)=>{
-      const div=document.createElement('div');
-      div.className='question';
-      div.innerHTML=`<p>${idx+1}. ${item.q}</p>`+
-        item.options.map(opt=>`<label><input type="radio" name="q${idx}" value="${opt}"> ${opt}</label>`).join('');
+    // Render questions
+    questions.forEach((item, index) => {
+      const div = document.createElement("div");
+      div.classList.add("question");
+      div.innerHTML = `<p>${index + 1}. ${item.q}</p>` +
+        item.options.map(opt =>
+          `<label><input type="radio" name="q${index}" value="${opt}" /> ${opt}</label>`
+        ).join('');
       quizContainer.appendChild(div);
     });
 
-    submitBtn.onclick=()=>{
-      let score=0;
-      questions.forEach((item,i)=>{
-        const picked=document.querySelector(\`input[name=q\${i}]:checked\`);
-        if(picked&&picked.value===item.answer) score++;
+    // Handle submission
+    submitBtn.onclick = () => {
+      let score = 0;
+      questions.forEach((item, i) => {
+        const selected = document.querySelector(`input[name=q${i}]:checked`);
+        if (selected && selected.value === item.answer) {
+          score++;
+        }
       });
-      const estIQ=80+score*4;
-      resultBox.classList.remove('hidden');
-      resultBox.innerHTML=\`<h2>Your Estimated IQ: \${estIQ}</h2><p>You answered <strong>\${score}/10</strong> correctly.</p><p>Want a detailed breakdown & personalized improvement plan?</p><a href="https://gumroad.com/l/YOUR_PRODUCT_SLUG" target="_blank"><button class="cta">Unlock Full Report</button></a>\`;
-      window.scrollTo({top:0,behavior:'smooth'});
+      const estimatedIQ = 80 + score * 4;
+      resultBox.style.display = "block";
+      resultBox.innerHTML = `
+        <h2>Your Estimated IQ: ${estimatedIQ}</h2>
+        <p>You got ${score} out of 10 correct.</p>
+        <p>Want a full breakdown and improvement tips?</p>
+        <a href="https://gumroad.com/l/YOUR_PRODUCT_SLUG" target="_blank">
+          <button>Unlock Full Report</button>
+        </a>`;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     };
   </script>
 </body>
 </html>
+
