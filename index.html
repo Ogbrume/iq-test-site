@@ -86,15 +86,22 @@
       font-style: italic;
     }
     #timer {
-      text-align: center;
-      font-weight: bold;
-      font-size: 1rem;
-      margin-bottom: 1rem;
-      color: #ef4444;
-    }
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  background-color: #fee2e2;
+  color: #b91c1c;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  z-index: 1000;
+}
   </style>
 </head>
 <body>
+  <div id="timer">Time Remaining: 07:00</div>
   <div class="card">
     <h1>IQForge</h1>
     <p class="desc">Answer 20 logic-based questions in under 7 minutes.</p>
