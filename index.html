@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>IQForge – Quick IQ Test</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://gumroad.com/js/gumroad.js"></script>
   <style>
     body {
       font-family: 'Inter', sans-serif;
@@ -21,7 +22,6 @@
       box-shadow: 0 10px 25px rgba(0,0,0,0.1);
       max-width: 800px;
       width: 100%;
-      position: relative;
     }
     h1 {
       text-align: center;
@@ -32,6 +32,32 @@
       text-align: center;
       margin-bottom: 1.5rem;
       color: #444;
+    }
+    .floating-timer {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      background: #111827;
+      color: white;
+      padding: 0.6rem 1rem;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: bold;
+      z-index: 1000;
+    }
+    .progress-container {
+      width: 100%;
+      background: #e5e7eb;
+      border-radius: 0.5rem;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+      height: 16px;
+    }
+    .progress-bar {
+      height: 100%;
+      background: #2563eb;
+      width: 0%;
+      transition: width 0.4s ease-in-out;
     }
     .question {
       margin-bottom: 1.5rem;
@@ -86,79 +112,35 @@
       margin-top: 1.5rem;
       font-style: italic;
     }
-    .timer-bar {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: #f97316;
-      color: white;
-      padding: 10px 15px;
-      font-weight: bold;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-      z-index: 9999;
-    }
   </style>
 </head>
-
-  <script src="https://gumroad.com/js/gumroad.js"></script>
-  
 <body>
-  <div class="timer-bar" id="countdown">Time: 07:00</div>
+  <div class="floating-timer" id="timer">Time left: 7:00</div>
   <div class="card">
     <h1>IQForge</h1>
-    <p class="desc">Answer 20 logic-based questions before time runs out. You'll only get one try!</p>
+    <p class="desc">Answer 20 logic-based questions to estimate your IQ score in under 7 minutes.</p>
+    <div class="progress-container">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
     <div id="quiz-container"></div>
     <button id="submit-btn">Submit Answers</button>
     <div id="result"></div>
   </div>
 
   <script>
-    const totalTime = 7 * 60; // 7 minutes in seconds
-    let timeLeft = totalTime;
-    let timerStarted = false;
-    const countdownDisplay = document.getElementById("countdown");
+    const TOTAL_TIME = 420; // 7 minutes in seconds
+    let timeLeft = TOTAL_TIME;
+    const timerDisplay = document.getElementById("timer");
+    const questions = [...Array(20)].map((_, i) => ({
+      q: `Sample Question ${i + 1}?`,
+      options: ["A", "B", "C", "D"],
+      answer: "A"
+    }));
+
     const quizContainer = document.getElementById("quiz-container");
     const submitBtn = document.getElementById("submit-btn");
     const resultBox = document.getElementById("result");
-
-    const questions = [
-      { q: "What comes next in the sequence: 3, 6, 12, 24, ?", options: ["30", "36", "48", "54"], answer: "48" },
-      { q: "If some Smibs are Blibs and all Blibs are Cribs, are all Smibs definitely Cribs?", options: ["Yes", "No", "Cannot determine", "Only sometimes"], answer: "Cannot determine" },
-      { q: "Find the odd one out: Triangle, Circle, Square, Cylinder", options: ["Triangle", "Circle", "Square", "Cylinder"], answer: "Cylinder" },
-      { q: "Which number is missing? 16, 11, 7, 4, ?", options: ["2", "1", "0", "-1"], answer: "2" },
-      { q: "Rearrange the letters \"CIFAIPC\" to form the name of a(n)…", options: ["City", "Animal", "Ocean", "Country"], answer: "Country" },
-      { q: "A clock shows 3:15. What is the angle between the hour and minute hand?", options: ["0°", "7.5°", "15°", "30°"], answer: "7.5°" },
-      { q: "If CAT is coded as 3120, how is DOG coded?", options: ["4157", "4158", "4185", "5148"], answer: "4158" },
-      { q: "Which figure completes the pattern? ▲ ▼ ▲ ▼ ?", options: ["▲", "▼", "■", "◆"], answer: "▲" },
-      { q: "Find the next prime after 43", options: ["47", "49", "51", "53"], answer: "47" },
-      { q: "Five people stand in line. How many different orders are possible?", options: ["60", "100", "120", "240"], answer: "120" },
-      { q: "What comes next in the sequence: 2, 4, 8, 16, ?", options: ["24", "30", "32", "36"], answer: "32" },
-      { q: "If BIRD = 2194, then FISH = ?", options: ["6918", "6919", "6920", "6921"], answer: "6919" },
-      { q: "What is the missing number? 1, 1, 2, 3, 5, 8, ?", options: ["13", "11", "12", "15"], answer: "13" },
-      { q: "Anagram of \"LISTEN\" is:", options: ["SILENT", "TENSIL", "INLETS", "Both A and C"], answer: "Both A and C" },
-      { q: "Which one is different? Red, Blue, Green, Circle", options: ["Red", "Blue", "Green", "Circle"], answer: "Circle" },
-      { q: "If 2x + 3 = 11, what is x?", options: ["4", "5", "3", "6"], answer: "4" },
-      { q: "Which word does not belong?", options: ["Book", "Pen", "Pencil", "Apple"], answer: "Apple" },
-      { q: "Water is to pipe as…", options: ["Blood is to vein", "Current is to wire", "Sound is to speaker", "All of the above"], answer: "All of the above" },
-      { q: "Which of the following is a mammal?", options: ["Frog", "Shark", "Whale", "Lizard"], answer: "Whale" },
-      { q: "If all Bloops are Razzies and all Razzies are Lazzies, then are all Bloops definitely Lazzies?", options: ["Yes", "No", "Only if Bloops are Lazzies", "Cannot determine"], answer: "Yes" },
-    ];
-
-    function updateCountdown() {
-      if (timeLeft <= 0) {
-        clearInterval(timer);
-        handleSubmit(true);
-        return;
-      }
-      const minutes = Math.floor(timeLeft / 60).toString().padStart(2, '0');
-      const seconds = (timeLeft % 60).toString().padStart(2, '0');
-      countdownDisplay.textContent = `Time: ${minutes}:${seconds}`;
-      timeLeft--;
-    }
-
-    const timer = setInterval(updateCountdown, 1000);
-    updateCountdown(); // initial call
+    const progressBar = document.getElementById("progress-bar");
 
     // Render questions
     questions.forEach((item, index) => {
@@ -171,7 +153,39 @@
       quizContainer.appendChild(div);
     });
 
-    function handleSubmit(auto = false) {
+    // Progress bar update
+    let answeredCount = 0;
+    questions.forEach((item, i) => {
+      const inputs = document.getElementsByName(`q${i}`);
+      inputs.forEach(input => {
+        input.addEventListener('change', () => {
+          const alreadyAnswered = [...inputs].some(r => r.dataset.answered === "true");
+          if (!alreadyAnswered) {
+            answeredCount++;
+            inputs.forEach(r => r.dataset.answered = "true");
+          }
+          progressBar.style.width = `${Math.round((answeredCount / questions.length) * 100)}%`;
+        });
+      });
+    });
+
+    // Timer
+    const countdown = setInterval(() => {
+      if (timeLeft <= 0) {
+        clearInterval(countdown);
+        submitBtn.click();
+        timerDisplay.innerText = "Time's up!";
+        return;
+      }
+      const minutes = Math.floor(timeLeft / 60);
+      const seconds = String(timeLeft % 60).padStart(2, '0');
+      timerDisplay.innerText = `Time left: ${minutes}:${seconds}`;
+      timeLeft--;
+    }, 1000);
+
+    // Submit logic
+    submitBtn.onclick = () => {
+      clearInterval(countdown);
       let score = 0;
       questions.forEach((item, i) => {
         const selected = document.querySelector(`input[name=q${i}]:checked`);
@@ -179,27 +193,19 @@
           score++;
         }
       });
-      const adjustedScore = auto ? Math.floor(score * 0.8) : score;
-      const estimatedIQ = 80 + adjustedScore * 2.5;
+      const estimatedIQ = 80 + score * 2.5;
       resultBox.style.display = "block";
       resultBox.innerHTML = `
         <h2>Your Estimated IQ: ${Math.round(estimatedIQ)}</h2>
-        <p>You got ${adjustedScore} out of ${questions.length} correct.</p>
+        <p>You got ${score} out of ${questions.length} correct.</p>
         <p><strong>Want a full breakdown and performance analysis?</strong></p>
-        <a class="gumroad-button" 
-   href="https://digitallaunchco.gumroad.com/l/qifnj" 
-   data-gumroad-single-product="true" 
-   style="display: inline-block; text-decoration: none;">
-  <button class="cta-button">Unlock My Full Report</button>
-</a>
+        <a class="gumroad-button" href="https://digitallaunchco.gumroad.com/l/qifnj" data-gumroad-overlay-checkout="true">
+          <button class="cta-button">Unlock My Full Report</button>
+        </a>
         <div class="testimonial">“This test gave me surprising insights and helped me prep for actual assessments.” – Nia, 22</div>
       `;
       resultBox.scrollIntoView({ behavior: "smooth" });
-      clearInterval(timer);
-      submitBtn.disabled = true;
-    }
-
-    submitBtn.onclick = () => handleSubmit(false);
+    };
   </script>
 </body>
 </html>
