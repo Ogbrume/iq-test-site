@@ -4,44 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>IQForge – Quick IQ Test</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f9fafb;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(to right, #eef2f3, #ffffff);
       margin: 0;
       padding: 2rem;
       display: flex;
       justify-content: center;
-    }
-    .floating-elements {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      background: #fff;
-      border-bottom: 1px solid #ccc;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.5rem 1rem;
-      z-index: 9999;
-    }
-    .floating-bar {
-      flex: 1;
-      height: 8px;
-      background: #e5e7eb;
-      margin-right: 1rem;
-      border-radius: 5px;
-      overflow: hidden;
-    }
-    .floating-progress {
-      height: 100%;
-      background: #2563eb;
-      width: 0%;
-    }
-    .countdown-timer {
-      font-weight: bold;
-      font-size: 0.9rem;
     }
     .card {
       background: white;
@@ -50,22 +21,48 @@
       box-shadow: 0 10px 25px rgba(0,0,0,0.1);
       max-width: 800px;
       width: 100%;
-      margin-top: 3rem;
+      position: relative;
     }
     h1 {
       text-align: center;
       margin-bottom: 1rem;
+      font-size: 2rem;
     }
     p.desc {
       text-align: center;
       margin-bottom: 1.5rem;
-      color: #555;
+      color: #444;
+    }
+    .progress-container {
+      width: 100%;
+      background: #e5e7eb;
+      border-radius: 0.5rem;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+      height: 16px;
+    }
+    .progress-bar {
+      height: 100%;
+      background: #2563eb;
+      width: 0%;
+      transition: width 0.4s ease-in-out;
+    }
+    .floating-timer {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      background: #2563eb;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      font-weight: 600;
+      z-index: 999;
     }
     .question {
       margin-bottom: 1.5rem;
     }
     .question p {
-      font-weight: bold;
+      font-weight: 600;
       margin-bottom: 0.5rem;
     }
     label {
@@ -80,20 +77,25 @@
       border: none;
       padding: 1rem;
       font-size: 1rem;
+      font-weight: 600;
       border-radius: 0.5rem;
       cursor: pointer;
       margin-top: 1rem;
+      transition: background 0.3s;
     }
     button:hover {
       background: #1e40af;
     }
     #result {
       margin-top: 2rem;
+      padding-top: 1rem;
       text-align: center;
       display: none;
+      border-top: 1px solid #ddd;
     }
     #result h2 {
       margin-bottom: 0.5rem;
+      color: #111827;
     }
     .cta-button {
       margin-top: 1rem;
@@ -102,172 +104,90 @@
     .cta-button:hover {
       background: #059669;
     }
+    .testimonial {
+      background: #f0fdf4;
+      padding: 1rem;
+      border-left: 4px solid #10b981;
+      margin-top: 1.5rem;
+      font-style: italic;
+    }
   </style>
 </head>
 <body>
-  <div class="floating-elements">
-    <div class="floating-bar"><div class="floating-progress" id="floating-progress"></div></div>
-    <div class="countdown-timer">Time Left: <span id="countdown">420</span>s</div>
-  </div>
-
+  <div class="floating-timer" id="countdown">Time left: 7:00</div>
   <div class="card">
     <h1>IQForge</h1>
     <p class="desc">Answer 20 logic-based questions to estimate your IQ score in under 7 minutes.</p>
-    <div id="quiz-container">
-    <div class="question">
-      <p>1. What comes next in the sequence: 3, 6, 12, 24, ?</p>
-      <label><input type="radio" name="q0" value="30" /> 30</label><label><input type="radio" name="q0" value="36" /> 36</label><label><input type="radio" name="q0" value="48" /> 48</label><label><input type="radio" name="q0" value="54" /> 54</label>
+    <div class="progress-container">
+      <div class="progress-bar" id="progress-bar"></div>
     </div>
-
-    <div class="question">
-      <p>2. If some Smibs are Blibs and all Blibs are Cribs, are all Smibs definitely Cribs?</p>
-      <label><input type="radio" name="q1" value="Yes" /> Yes</label><label><input type="radio" name="q1" value="No" /> No</label><label><input type="radio" name="q1" value="Cannot determine" /> Cannot determine</label><label><input type="radio" name="q1" value="Only sometimes" /> Only sometimes</label>
-    </div>
-
-    <div class="question">
-      <p>3. Find the odd one out: Triangle, Circle, Square, Cylinder</p>
-      <label><input type="radio" name="q2" value="Triangle" /> Triangle</label><label><input type="radio" name="q2" value="Circle" /> Circle</label><label><input type="radio" name="q2" value="Square" /> Square</label><label><input type="radio" name="q2" value="Cylinder" /> Cylinder</label>
-    </div>
-
-    <div class="question">
-      <p>4. Which number is missing? 16, 11, 7, 4, ?</p>
-      <label><input type="radio" name="q3" value="2" /> 2</label><label><input type="radio" name="q3" value="1" /> 1</label><label><input type="radio" name="q3" value="0" /> 0</label><label><input type="radio" name="q3" value="-1" /> -1</label>
-    </div>
-
-    <div class="question">
-      <p>5. Rearrange the letters &quot;CIFAIPC&quot; to form the name of a(n)…</p>
-      <label><input type="radio" name="q4" value="City" /> City</label><label><input type="radio" name="q4" value="Animal" /> Animal</label><label><input type="radio" name="q4" value="Ocean" /> Ocean</label><label><input type="radio" name="q4" value="Country" /> Country</label>
-    </div>
-
-    <div class="question">
-      <p>6. A clock shows 3:15. What is the angle between the hour and minute hand?</p>
-      <label><input type="radio" name="q5" value="0°" /> 0°</label><label><input type="radio" name="q5" value="7.5°" /> 7.5°</label><label><input type="radio" name="q5" value="15°" /> 15°</label><label><input type="radio" name="q5" value="30°" /> 30°</label>
-    </div>
-
-    <div class="question">
-      <p>7. If CAT is coded as 3120, how is DOG coded?</p>
-      <label><input type="radio" name="q6" value="4157" /> 4157</label><label><input type="radio" name="q6" value="4158" /> 4158</label><label><input type="radio" name="q6" value="4185" /> 4185</label><label><input type="radio" name="q6" value="5148" /> 5148</label>
-    </div>
-
-    <div class="question">
-      <p>8. Which figure completes the pattern? ▲ ▼ ▲ ▼ ?</p>
-      <label><input type="radio" name="q7" value="▲" /> ▲</label><label><input type="radio" name="q7" value="▼" /> ▼</label><label><input type="radio" name="q7" value="■" /> ■</label><label><input type="radio" name="q7" value="◆" /> ◆</label>
-    </div>
-
-    <div class="question">
-      <p>9. Find the next prime after 43</p>
-      <label><input type="radio" name="q8" value="47" /> 47</label><label><input type="radio" name="q8" value="49" /> 49</label><label><input type="radio" name="q8" value="51" /> 51</label><label><input type="radio" name="q8" value="53" /> 53</label>
-    </div>
-
-    <div class="question">
-      <p>10. Five people stand in line. How many different orders are possible?</p>
-      <label><input type="radio" name="q9" value="60" /> 60</label><label><input type="radio" name="q9" value="100" /> 100</label><label><input type="radio" name="q9" value="120" /> 120</label><label><input type="radio" name="q9" value="240" /> 240</label>
-    </div>
-
-    <div class="question">
-      <p>11. What is the square root of 144?</p>
-      <label><input type="radio" name="q10" value="10" /> 10</label><label><input type="radio" name="q10" value="12" /> 12</label><label><input type="radio" name="q10" value="14" /> 14</label><label><input type="radio" name="q10" value="16" /> 16</label>
-    </div>
-
-    <div class="question">
-      <p>12. Which word is a synonym of &#x27;obscure&#x27;?</p>
-      <label><input type="radio" name="q11" value="Clear" /> Clear</label><label><input type="radio" name="q11" value="Unknown" /> Unknown</label><label><input type="radio" name="q11" value="Famous" /> Famous</label><label><input type="radio" name="q11" value="Open" /> Open</label>
-    </div>
-
-    <div class="question">
-      <p>13. What is 15% of 200?</p>
-      <label><input type="radio" name="q12" value="20" /> 20</label><label><input type="radio" name="q12" value="25" /> 25</label><label><input type="radio" name="q12" value="30" /> 30</label><label><input type="radio" name="q12" value="35" /> 35</label>
-    </div>
-
-    <div class="question">
-      <p>14. Complete the analogy: Book is to Reading as Fork is to…</p>
-      <label><input type="radio" name="q13" value="Drawing" /> Drawing</label><label><input type="radio" name="q13" value="Writing" /> Writing</label><label><input type="radio" name="q13" value="Stirring" /> Stirring</label><label><input type="radio" name="q13" value="Eating" /> Eating</label>
-    </div>
-
-    <div class="question">
-      <p>15. Which planet is closest to the Sun?</p>
-      <label><input type="radio" name="q14" value="Venus" /> Venus</label><label><input type="radio" name="q14" value="Earth" /> Earth</label><label><input type="radio" name="q14" value="Mercury" /> Mercury</label><label><input type="radio" name="q14" value="Mars" /> Mars</label>
-    </div>
-
-    <div class="question">
-      <p>16. Which shape has the most sides?</p>
-      <label><input type="radio" name="q15" value="Triangle" /> Triangle</label><label><input type="radio" name="q15" value="Pentagon" /> Pentagon</label><label><input type="radio" name="q15" value="Octagon" /> Octagon</label><label><input type="radio" name="q15" value="Hexagon" /> Hexagon</label>
-    </div>
-
-    <div class="question">
-      <p>17. What comes next: Monday, Tuesday, Wednesday, ...</p>
-      <label><input type="radio" name="q16" value="Thursday" /> Thursday</label><label><input type="radio" name="q16" value="Friday" /> Friday</label><label><input type="radio" name="q16" value="Saturday" /> Saturday</label><label><input type="radio" name="q16" value="Sunday" /> Sunday</label>
-    </div>
-
-    <div class="question">
-      <p>18. How many legs do three spiders have?</p>
-      <label><input type="radio" name="q17" value="18" /> 18</label><label><input type="radio" name="q17" value="24" /> 24</label><label><input type="radio" name="q17" value="12" /> 12</label><label><input type="radio" name="q17" value="20" /> 20</label>
-    </div>
-
-    <div class="question">
-      <p>19. What is H2O commonly known as?</p>
-      <label><input type="radio" name="q18" value="Oxygen" /> Oxygen</label><label><input type="radio" name="q18" value="Water" /> Water</label><label><input type="radio" name="q18" value="Hydrogen" /> Hydrogen</label><label><input type="radio" name="q18" value="Steam" /> Steam</label>
-    </div>
-
-    <div class="question">
-      <p>20. If you rearrange the letters ‘CIFAIPC’, you would have the name of a:</p>
-      <label><input type="radio" name="q19" value="City" /> City</label><label><input type="radio" name="q19" value="Country" /> Country</label><label><input type="radio" name="q19" value="Ocean" /> Ocean</label><label><input type="radio" name="q19" value="Animal" /> Animal</label>
-    </div>
-    </div>
+    <div id="quiz-container"></div>
     <button id="submit-btn">Submit Answers</button>
     <div id="result"></div>
   </div>
 
   <script>
-    const answers = ["48","Cannot determine","Cylinder","2","Country","7.5°","4158","▲","47","120","12","Unknown","30","Eating","Mercury","Octagon","Thursday","24","Water","Country"];
-    const countdownEl = document.getElementById("countdown");
-    const floatingProgress = document.getElementById("floating-progress");
+    const questions = [
+      { q: "What comes next in the sequence: 3, 6, 12, 24, ?", options: ["30", "36", "48", "54"], answer: "48" },
+      { q: "If some Smibs are Blibs and all Blibs are Cribs, are all Smibs definitely Cribs?", options: ["Yes", "No", "Cannot determine", "Only sometimes"], answer: "Cannot determine" },
+      { q: "Find the odd one out: Triangle, Circle, Square, Cylinder", options: ["Triangle", "Circle", "Square", "Cylinder"], answer: "Cylinder" },
+      { q: "Which number is missing? 16, 11, 7, 4, ?", options: ["2", "1", "0", "-1"], answer: "2" },
+      { q: "Rearrange the letters 'CIFAIPC' to form the name of a(n)…", options: ["City", "Animal", "Ocean", "Country"], answer: "Country" },
+      { q: "A clock shows 3:15. What is the angle between the hour and minute hand?", options: ["0°", "7.5°", "15°", "30°"], answer: "7.5°" },
+      { q: "If CAT is coded as 3120, how is DOG coded?", options: ["4157", "4158", "4185", "5148"], answer: "4158" },
+      { q: "Which figure completes the pattern? ▲ ▼ ▲ ▼ ?", options: ["▲", "▼", "■", "◆"], answer: "▲" },
+      { q: "Find the next prime after 43", options: ["47", "49", "51", "53"], answer: "47" },
+      { q: "Five people stand in line. How many different orders are possible?", options: ["60", "100", "120", "240"], answer: "120" },
+      { q: "What comes after: 2, 4, 8, 16, ?", options: ["18", "24", "32", "64"], answer: "32" },
+      { q: "Which word doesn't belong: Apple, Banana, Carrot, Mango", options: ["Apple", "Banana", "Carrot", "Mango"], answer: "Carrot" },
+      { q: "What is the square root of 144?", options: ["10", "12", "14", "16"], answer: "12" },
+      { q: "Which day comes next: Monday, Wednesday, Friday, ?", options: ["Saturday", "Sunday", "Monday", "Tuesday"], answer: "Sunday" },
+      { q: "What comes next in this letter series: A, C, E, G, ?", options: ["H", "I", "J", "K"], answer: "I" },
+      { q: "What is the capital of Canada?", options: ["Toronto", "Ottawa", "Montreal", "Vancouver"], answer: "Ottawa" },
+      { q: "Which is heavier: 1kg of iron or 1kg of feathers?", options: ["Iron", "Feathers", "Same", "Depends"], answer: "Same" },
+      { q: "Which number is divisible by 3: 22, 25, 27, 31", options: ["22", "25", "27", "31"], answer: "27" },
+      { q: "Which is not a primary color?", options: ["Red", "Blue", "Yellow", "Green"], answer: "Green" },
+      { q: "What is 15% of 200?", options: ["20", "25", "30", "35"], answer: "30" }
+    ];
+
+    const quizContainer = document.getElementById("quiz-container");
     const submitBtn = document.getElementById("submit-btn");
     const resultBox = document.getElementById("result");
+    const progressBar = document.getElementById("progress-bar");
 
-    let countdown = 420;
+    // Render questions
+    questions.forEach((item, index) => {
+      const div = document.createElement("div");
+      div.classList.add("question");
+      div.innerHTML = `<p>${index + 1}. ${item.q}</p>` +
+        item.options.map(opt =>
+          `<label><input type="radio" name="q${index}" value="${opt}" /> ${opt}</label>`
+        ).join('');
+      quizContainer.appendChild(div);
+    });
+
+    // Progress tracking
     let answeredCount = 0;
-    const totalQuestions = 20;
-
-    function updateProgress() {
-      const percentage = Math.round((answeredCount / totalQuestions) * 100);
-      floatingProgress.style.width = percentage + "%";
-    }
-
-    document.querySelectorAll("input[type='radio']").forEach(input => {
-      input.addEventListener("change", () => {
-        const name = input.name;
-        const previouslyAnswered = [...document.querySelectorAll(`input[name='${name}']`)].some(i => i.dataset.answered === "true");
-        if (!previouslyAnswered) {
-          answeredCount++;
-          [...document.querySelectorAll(`input[name='${name}']`)].forEach(i => i.dataset.answered = "true");
-          updateProgress();
-        }
+    questions.forEach((item, i) => {
+      const inputs = document.getElementsByName(`q${i}`);
+      inputs.forEach(input => {
+        input.addEventListener('change', () => {
+          const alreadyAnswered = [...inputs].some(r => r.dataset.answered === "true");
+          if (!alreadyAnswered) {
+            answeredCount++;
+            inputs.forEach(r => r.dataset.answered = "true");
+          }
+          progressBar.style.width = `${Math.round((answeredCount / questions.length) * 100)}%`;
+        });
       });
     });
 
-    function autoSubmit() {
-      submitBtn.click();
-    }
-
-    function startCountdown() {
-      const timer = setInterval(() => {
-        countdown--;
-        countdownEl.textContent = countdown;
-        if (countdown <= 0) {
-          clearInterval(timer);
-          autoSubmit();
-        }
-      }, 1000);
-    }
-
-    startCountdown();
-
-    submitBtn.onclick = () => {
+    // Submit logic
+    function submitQuiz() {
       let score = 0;
-      answers.forEach((correct, i) => {
+      questions.forEach((item, i) => {
         const selected = document.querySelector(`input[name=q${i}]:checked`);
-        if (selected && selected.value === correct) {
+        if (selected && selected.value === item.answer) {
           score++;
         }
       });
@@ -275,21 +195,33 @@
       resultBox.style.display = "block";
       resultBox.innerHTML = `
         <h2>Your Estimated IQ: ${Math.round(estimatedIQ)}</h2>
-        <p>You got ${score} out of 20 correct.</p>
+        <p>You got ${score} out of ${questions.length} correct.</p>
         <p><strong>Want a full breakdown and performance analysis?</strong></p>
-        <a class="gumroad-button" href="https://digitallaunchco.gumroad.com/l/qifnj" target="_blank" data-gumroad-overlay-checkout="true">
+        <a href="https://digitallaunchco.gumroad.com/l/qifnj" target="_blank" data-gumroad-overlay-checkout="true">
           <button class="cta-button">Unlock My Full Report</button>
-        </a>`;
+        </a>
+        <div class="testimonial">“This test gave me surprising insights and helped me prep for actual assessments.” – Nia, 22</div>
+      `;
       resultBox.scrollIntoView({ behavior: "smooth" });
-    };
+    }
 
-    // Gumroad embed
-    (function() {
-      var gumroadScript = document.createElement("script");
-      gumroadScript.src = "https://gumroad.com/js/gumroad.js";
-      document.body.appendChild(gumroadScript);
-    })();
+    submitBtn.onclick = submitQuiz;
+
+    // Timer logic
+    let totalSeconds = 420;
+    const countdownEl = document.getElementById("countdown");
+    const timer = setInterval(() => {
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds % 60;
+      countdownEl.textContent = `Time left: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+      totalSeconds--;
+      if (totalSeconds < 0) {
+        clearInterval(timer);
+        submitQuiz();
+      }
+    }, 1000);
   </script>
+  <script src="https://gumroad.com/js/gumroad.js"></script>
 </body>
 </html>
 
