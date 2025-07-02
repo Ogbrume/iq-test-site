@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>IQForge – Quick IQ Test</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
@@ -21,15 +21,16 @@
       box-shadow: 0 10px 25px rgba(0,0,0,0.1);
       max-width: 800px;
       width: 100%;
+      position: relative;
     }
     h1 {
       text-align: center;
-      margin-bottom: 0.5rem;
+      margin-bottom: 1rem;
       font-size: 2rem;
     }
     p.desc {
       text-align: center;
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
       color: #444;
     }
     .question {
@@ -85,39 +86,45 @@
       margin-top: 1.5rem;
       font-style: italic;
     }
-    #timer {
-  position: fixed;
-  top: 1rem;
-  right: 1rem;
-  background-color: #fee2e2;
-  color: #b91c1c;
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  font-weight: 600;
-  font-size: 0.95rem;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-  z-index: 1000;
-}
+    .timer-bar {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #f97316;
+      color: white;
+      padding: 10px 15px;
+      font-weight: bold;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      z-index: 9999;
+    }
   </style>
 </head>
 <body>
-  <div id="timer">Time Remaining: 07:00</div>
+  <div class="timer-bar" id="countdown">Time: 07:00</div>
   <div class="card">
     <h1>IQForge</h1>
-    <p class="desc">Answer 20 logic-based questions in under 7 minutes.</p>
-    <div id="timer">Time Remaining: 07:00</div>
+    <p class="desc">Answer 20 logic-based questions before time runs out. You'll only get one try!</p>
     <div id="quiz-container"></div>
     <button id="submit-btn">Submit Answers</button>
     <div id="result"></div>
   </div>
 
   <script>
+    const totalTime = 7 * 60; // 7 minutes in seconds
+    let timeLeft = totalTime;
+    let timerStarted = false;
+    const countdownDisplay = document.getElementById("countdown");
+    const quizContainer = document.getElementById("quiz-container");
+    const submitBtn = document.getElementById("submit-btn");
+    const resultBox = document.getElementById("result");
+
     const questions = [
       { q: "What comes next in the sequence: 3, 6, 12, 24, ?", options: ["30", "36", "48", "54"], answer: "48" },
       { q: "If some Smibs are Blibs and all Blibs are Cribs, are all Smibs definitely Cribs?", options: ["Yes", "No", "Cannot determine", "Only sometimes"], answer: "Cannot determine" },
       { q: "Find the odd one out: Triangle, Circle, Square, Cylinder", options: ["Triangle", "Circle", "Square", "Cylinder"], answer: "Cylinder" },
       { q: "Which number is missing? 16, 11, 7, 4, ?", options: ["2", "1", "0", "-1"], answer: "2" },
-      { q: "Rearrange the letters 'CIFAIPC' to form the name of a(n)…", options: ["City", "Animal", "Ocean", "Country"], answer: "Country" },
+      { q: "Rearrange the letters \"CIFAIPC\" to form the name of a(n)…", options: ["City", "Animal", "Ocean", "Country"], answer: "Country" },
       { q: "A clock shows 3:15. What is the angle between the hour and minute hand?", options: ["0°", "7.5°", "15°", "30°"], answer: "7.5°" },
       { q: "If CAT is coded as 3120, how is DOG coded?", options: ["4157", "4158", "4185", "5148"], answer: "4158" },
       { q: "Which figure completes the pattern? ▲ ▼ ▲ ▼ ?", options: ["▲", "▼", "■", "◆"], answer: "▲" },
@@ -126,21 +133,31 @@
       { q: "What comes next in the sequence: 2, 4, 8, 16, ?", options: ["24", "30", "32", "36"], answer: "32" },
       { q: "If BIRD = 2194, then FISH = ?", options: ["6918", "6919", "6920", "6921"], answer: "6919" },
       { q: "What is the missing number? 1, 1, 2, 3, 5, 8, ?", options: ["13", "11", "12", "15"], answer: "13" },
-      { q: "Anagram of 'LISTEN' is:", options: ["SILENT", "TENSIL", "INLETS", "Both A and C"], answer: "Both A and C" },
+      { q: "Anagram of \"LISTEN\" is:", options: ["SILENT", "TENSIL", "INLETS", "Both A and C"], answer: "Both A and C" },
       { q: "Which one is different? Red, Blue, Green, Circle", options: ["Red", "Blue", "Green", "Circle"], answer: "Circle" },
       { q: "If 2x + 3 = 11, what is x?", options: ["4", "5", "3", "6"], answer: "4" },
       { q: "Which word does not belong?", options: ["Book", "Pen", "Pencil", "Apple"], answer: "Apple" },
       { q: "Water is to pipe as…", options: ["Blood is to vein", "Current is to wire", "Sound is to speaker", "All of the above"], answer: "All of the above" },
       { q: "Which of the following is a mammal?", options: ["Frog", "Shark", "Whale", "Lizard"], answer: "Whale" },
-      { q: "If all Bloops are Razzies and all Razzies are Lazzies, are all Bloops Lazzies?", options: ["Yes", "No", "Only if Bloops are Lazzies", "Cannot determine"], answer: "Yes" },
+      { q: "If all Bloops are Razzies and all Razzies are Lazzies, then are all Bloops definitely Lazzies?", options: ["Yes", "No", "Only if Bloops are Lazzies", "Cannot determine"], answer: "Yes" },
     ];
 
-    const quizContainer = document.getElementById("quiz-container");
-    const submitBtn = document.getElementById("submit-btn");
-    const resultBox = document.getElementById("result");
-    const timerEl = document.getElementById("timer");
+    function updateCountdown() {
+      if (timeLeft <= 0) {
+        clearInterval(timer);
+        handleSubmit(true);
+        return;
+      }
+      const minutes = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+      const seconds = (timeLeft % 60).toString().padStart(2, '0');
+      countdownDisplay.textContent = `Time: ${minutes}:${seconds}`;
+      timeLeft--;
+    }
 
-    // Render Questions
+    const timer = setInterval(updateCountdown, 1000);
+    updateCountdown(); // initial call
+
+    // Render questions
     questions.forEach((item, index) => {
       const div = document.createElement("div");
       div.classList.add("question");
@@ -151,13 +168,7 @@
       quizContainer.appendChild(div);
     });
 
-    function calculateIQ(score, timeLeftSeconds) {
-      const base = 80 + score * 2.5;
-      const bonus = Math.floor(timeLeftSeconds / 30); // 1 point bonus per 30 seconds remaining
-      return Math.round(base + bonus);
-    }
-
-    function submitQuiz(auto = false) {
+    function handleSubmit(auto = false) {
       let score = 0;
       questions.forEach((item, i) => {
         const selected = document.querySelector(`input[name=q${i}]:checked`);
@@ -165,12 +176,12 @@
           score++;
         }
       });
-
-      const estimatedIQ = calculateIQ(score, remainingTime);
+      const adjustedScore = auto ? Math.floor(score * 0.8) : score;
+      const estimatedIQ = 80 + adjustedScore * 2.5;
       resultBox.style.display = "block";
       resultBox.innerHTML = `
-        <h2>Your Estimated IQ: ${estimatedIQ}</h2>
-        <p>You got ${score} out of ${questions.length} correct.</p>
+        <h2>Your Estimated IQ: ${Math.round(estimatedIQ)}</h2>
+        <p>You got ${adjustedScore} out of ${questions.length} correct.</p>
         <p><strong>Want a full breakdown and performance analysis?</strong></p>
         <a href="https://gumroad.com/l/YOUR_PRODUCT_SLUG" target="_blank">
           <button class="cta-button">Unlock My Full Report</button>
@@ -178,31 +189,12 @@
         <div class="testimonial">“This test gave me surprising insights and helped me prep for actual assessments.” – Nia, 22</div>
       `;
       resultBox.scrollIntoView({ behavior: "smooth" });
+      clearInterval(timer);
+      submitBtn.disabled = true;
     }
 
-    submitBtn.onclick = () => submitQuiz(false);
-
-    // Timer setup
-    let totalTime = 7 * 60; // 7 minutes in seconds
-    let remainingTime = totalTime;
-
-    function updateTimerDisplay() {
-      const mins = String(Math.floor(remainingTime / 60)).padStart(2, '0');
-      const secs = String(remainingTime % 60).padStart(2, '0');
-      timerEl.textContent = `Time Remaining: ${mins}:${secs}`;
-    }
-
-    const countdown = setInterval(() => {
-      if (remainingTime <= 0) {
-        clearInterval(countdown);
-        submitQuiz(true);
-      } else {
-        remainingTime--;
-        updateTimerDisplay();
-      }
-    }, 1000);
-
-    updateTimerDisplay();
+    submitBtn.onclick = () => handleSubmit(false);
   </script>
 </body>
 </html>
+
