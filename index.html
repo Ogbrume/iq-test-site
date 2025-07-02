@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>IQForge – Quick IQ Test</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
@@ -24,27 +24,13 @@
     }
     h1 {
       text-align: center;
-      margin-bottom: 1rem;
+      margin-bottom: 0.5rem;
       font-size: 2rem;
     }
     p.desc {
       text-align: center;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
       color: #444;
-    }
-    .progress-container {
-      width: 100%;
-      background: #e5e7eb;
-      border-radius: 0.5rem;
-      overflow: hidden;
-      margin-bottom: 1.5rem;
-      height: 16px;
-    }
-    .progress-bar {
-      height: 100%;
-      background: #2563eb;
-      width: 0%;
-      transition: width 0.4s ease-in-out;
     }
     .question {
       margin-bottom: 1.5rem;
@@ -99,17 +85,20 @@
       margin-top: 1.5rem;
       font-style: italic;
     }
+    #timer {
+      text-align: center;
+      font-weight: bold;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      color: #ef4444;
+    }
   </style>
 </head>
 <body>
   <div class="card">
     <h1>IQForge</h1>
-    <p class="desc">Answer 20 logic-based questions to estimate your IQ score in under 7 minutes.</p>
-    
-    <div class="progress-container">
-      <div class="progress-bar" id="progress-bar"></div>
-    </div>
-
+    <p class="desc">Answer 20 logic-based questions in under 7 minutes.</p>
+    <div id="timer">Time Remaining: 07:00</div>
     <div id="quiz-container"></div>
     <button id="submit-btn">Submit Answers</button>
     <div id="result"></div>
@@ -121,7 +110,7 @@
       { q: "If some Smibs are Blibs and all Blibs are Cribs, are all Smibs definitely Cribs?", options: ["Yes", "No", "Cannot determine", "Only sometimes"], answer: "Cannot determine" },
       { q: "Find the odd one out: Triangle, Circle, Square, Cylinder", options: ["Triangle", "Circle", "Square", "Cylinder"], answer: "Cylinder" },
       { q: "Which number is missing? 16, 11, 7, 4, ?", options: ["2", "1", "0", "-1"], answer: "2" },
-      { q: "Rearrange the letters \"CIFAIPC\" to form the name of a(n)…", options: ["City", "Animal", "Ocean", "Country"], answer: "Country" },
+      { q: "Rearrange the letters 'CIFAIPC' to form the name of a(n)…", options: ["City", "Animal", "Ocean", "Country"], answer: "Country" },
       { q: "A clock shows 3:15. What is the angle between the hour and minute hand?", options: ["0°", "7.5°", "15°", "30°"], answer: "7.5°" },
       { q: "If CAT is coded as 3120, how is DOG coded?", options: ["4157", "4158", "4185", "5148"], answer: "4158" },
       { q: "Which figure completes the pattern? ▲ ▼ ▲ ▼ ?", options: ["▲", "▼", "■", "◆"], answer: "▲" },
@@ -130,21 +119,21 @@
       { q: "What comes next in the sequence: 2, 4, 8, 16, ?", options: ["24", "30", "32", "36"], answer: "32" },
       { q: "If BIRD = 2194, then FISH = ?", options: ["6918", "6919", "6920", "6921"], answer: "6919" },
       { q: "What is the missing number? 1, 1, 2, 3, 5, 8, ?", options: ["13", "11", "12", "15"], answer: "13" },
-      { q: "Anagram of \"LISTEN\" is:", options: ["SILENT", "TENSIL", "INLETS", "Both A and C"], answer: "Both A and C" },
+      { q: "Anagram of 'LISTEN' is:", options: ["SILENT", "TENSIL", "INLETS", "Both A and C"], answer: "Both A and C" },
       { q: "Which one is different? Red, Blue, Green, Circle", options: ["Red", "Blue", "Green", "Circle"], answer: "Circle" },
       { q: "If 2x + 3 = 11, what is x?", options: ["4", "5", "3", "6"], answer: "4" },
       { q: "Which word does not belong?", options: ["Book", "Pen", "Pencil", "Apple"], answer: "Apple" },
       { q: "Water is to pipe as…", options: ["Blood is to vein", "Current is to wire", "Sound is to speaker", "All of the above"], answer: "All of the above" },
       { q: "Which of the following is a mammal?", options: ["Frog", "Shark", "Whale", "Lizard"], answer: "Whale" },
-      { q: "If all Bloops are Razzies and all Razzies are Lazzies, then are all Bloops definitely Lazzies?", options: ["Yes", "No", "Only if Bloops are Lazzies", "Cannot determine"], answer: "Yes" },
+      { q: "If all Bloops are Razzies and all Razzies are Lazzies, are all Bloops Lazzies?", options: ["Yes", "No", "Only if Bloops are Lazzies", "Cannot determine"], answer: "Yes" },
     ];
 
     const quizContainer = document.getElementById("quiz-container");
     const submitBtn = document.getElementById("submit-btn");
     const resultBox = document.getElementById("result");
-    const progressBar = document.getElementById("progress-bar");
+    const timerEl = document.getElementById("timer");
 
-    // Render questions
+    // Render Questions
     questions.forEach((item, index) => {
       const div = document.createElement("div");
       div.classList.add("question");
@@ -155,24 +144,13 @@
       quizContainer.appendChild(div);
     });
 
-    // Track answered questions for progress bar
-    let answeredCount = 0;
-    questions.forEach((item, i) => {
-      const inputs = document.getElementsByName(`q${i}`);
-      inputs.forEach(input => {
-        input.addEventListener('change', () => {
-          const alreadyAnswered = [...inputs].some(r => r.dataset.answered === "true");
-          if (!alreadyAnswered) {
-            answeredCount++;
-            inputs.forEach(r => r.dataset.answered = "true");
-          }
-          progressBar.style.width = `${Math.round((answeredCount / questions.length) * 100)}%`;
-        });
-      });
-    });
+    function calculateIQ(score, timeLeftSeconds) {
+      const base = 80 + score * 2.5;
+      const bonus = Math.floor(timeLeftSeconds / 30); // 1 point bonus per 30 seconds remaining
+      return Math.round(base + bonus);
+    }
 
-    // Submission logic
-    submitBtn.onclick = () => {
+    function submitQuiz(auto = false) {
       let score = 0;
       questions.forEach((item, i) => {
         const selected = document.querySelector(`input[name=q${i}]:checked`);
@@ -180,10 +158,11 @@
           score++;
         }
       });
-      const estimatedIQ = 80 + score * 2.5;
+
+      const estimatedIQ = calculateIQ(score, remainingTime);
       resultBox.style.display = "block";
       resultBox.innerHTML = `
-        <h2>Your Estimated IQ: ${Math.round(estimatedIQ)}</h2>
+        <h2>Your Estimated IQ: ${estimatedIQ}</h2>
         <p>You got ${score} out of ${questions.length} correct.</p>
         <p><strong>Want a full breakdown and performance analysis?</strong></p>
         <a href="https://gumroad.com/l/YOUR_PRODUCT_SLUG" target="_blank">
@@ -192,7 +171,31 @@
         <div class="testimonial">“This test gave me surprising insights and helped me prep for actual assessments.” – Nia, 22</div>
       `;
       resultBox.scrollIntoView({ behavior: "smooth" });
-    };
+    }
+
+    submitBtn.onclick = () => submitQuiz(false);
+
+    // Timer setup
+    let totalTime = 7 * 60; // 7 minutes in seconds
+    let remainingTime = totalTime;
+
+    function updateTimerDisplay() {
+      const mins = String(Math.floor(remainingTime / 60)).padStart(2, '0');
+      const secs = String(remainingTime % 60).padStart(2, '0');
+      timerEl.textContent = `Time Remaining: ${mins}:${secs}`;
+    }
+
+    const countdown = setInterval(() => {
+      if (remainingTime <= 0) {
+        clearInterval(countdown);
+        submitQuiz(true);
+      } else {
+        remainingTime--;
+        updateTimerDisplay();
+      }
+    }, 1000);
+
+    updateTimerDisplay();
   </script>
 </body>
 </html>
