@@ -2,12 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Quick IQ Test</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IQForge – Quick IQ Test</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f9fafb;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(to bottom, #f0f4ff, #e2e8f0);
       margin: 0;
       padding: 2rem;
       display: flex;
@@ -20,56 +21,89 @@
       box-shadow: 0 10px 25px rgba(0,0,0,0.1);
       max-width: 700px;
       width: 100%;
+      text-align: center;
     }
     h1 {
-      text-align: center;
-      margin-bottom: 1rem;
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: #1e293b;
     }
-    p.desc {
-      text-align: center;
-      margin-bottom: 1.5rem;
-      color: #555;
+    .tagline {
+      font-size: 0.95rem;
+      color: #64748b;
+      margin-bottom: 2rem;
     }
     .question {
+      text-align: left;
       margin-bottom: 1.5rem;
     }
     .question p {
-      font-weight: bold;
+      font-weight: 600;
       margin-bottom: 0.5rem;
     }
     label {
       display: block;
+      background: #f1f5f9;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
       margin: 0.25rem 0;
       cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    input[type=radio]:checked + label {
+      background: #dbeafe;
+      font-weight: 600;
     }
     button {
       width: 100%;
-      background: #2563eb;
+      background: linear-gradient(to right, #4f46e5, #6366f1);
       color: white;
       border: none;
       padding: 1rem;
       font-size: 1rem;
       border-radius: 0.5rem;
       cursor: pointer;
-      margin-top: 1rem;
+      margin-top: 1.5rem;
+      font-weight: 600;
     }
     button:hover {
-      background: #1e40af;
+      background: #4338ca;
     }
     #result {
       margin-top: 2rem;
-      text-align: center;
       display: none;
     }
-    #result h2 {
+    .result-card {
+      background: #eef2ff;
+      padding: 1.5rem;
+      border-radius: 1rem;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .result-card h2 {
       margin-bottom: 0.5rem;
+      font-size: 1.75rem;
+    }
+    .result-card p {
+      margin-bottom: 1rem;
+    }
+    .cta-btn {
+      background: linear-gradient(to right, #10b981, #059669);
+      color: white;
+      font-weight: 600;
+      border: none;
+      padding: 0.75rem 1.25rem;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
   <div class="card">
-    <h1>Quick IQ Test</h1>
-    <p class="desc">Answer 10 logic-based questions to estimate your IQ score in under 5 minutes.</p>
+    <h1>IQForge</h1>
+    <p class="tagline">AI-calibrated logic test • 10 questions • 5 minutes</p>
     <div id="quiz-container"></div>
     <button id="submit-btn">Submit Answers</button>
     <div id="result"></div>
@@ -93,7 +127,6 @@
     const submitBtn = document.getElementById("submit-btn");
     const resultBox = document.getElementById("result");
 
-    // Render questions
     questions.forEach((item, index) => {
       const div = document.createElement("div");
       div.classList.add("question");
@@ -104,7 +137,6 @@
       quizContainer.appendChild(div);
     });
 
-    // Handle submission
     submitBtn.onclick = () => {
       let score = 0;
       questions.forEach((item, i) => {
@@ -116,15 +148,18 @@
       const estimatedIQ = 80 + score * 4;
       resultBox.style.display = "block";
       resultBox.innerHTML = `
-        <h2>Your Estimated IQ: ${estimatedIQ}</h2>
-        <p>You got ${score} out of 10 correct.</p>
-        <p>Want a full breakdown and improvement tips?</p>
-        <a href="https://gumroad.com/l/YOUR_PRODUCT_SLUG" target="_blank">
-          <button>Unlock Full Report</button>
-        </a>`;
+        <div class="result-card">
+          <h2>Your Estimated IQ: ${estimatedIQ}</h2>
+          <p>You got ${score} out of 10 correct.</p>
+          <p><strong>Get your detailed analysis, percentile score, and improvement tips instantly.</strong></p>
+          <a href="https://gumroad.com/l/YOUR_PRODUCT_SLUG" target="_blank">
+            <button class="cta-btn">🔓 Unlock Full IQ Report – $4.99</button>
+          </a>
+        </div>`;
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
   </script>
 </body>
 </html>
+
 
