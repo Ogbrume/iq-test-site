@@ -123,7 +123,13 @@
     </div>
     <div id="quiz-container"></div>
     <button id="submit-btn">Submit Answers</button>
-    <div id="result"></div>
+    <div id="result">
+  <h2>Your Estimated IQ: ${Math.round(estimatedIQ)}</h2>
+  <p>You got ${score} out of ${questions.length} correct.</p>
+  <p><strong>Want a full breakdown and performance analysis?</strong></p>
+  <a class="gumroad-button cta-button" href="https://digitallaunchco.gumroad.com/l/qifnj">Unlock My Full Report</a>
+  <div class="testimonial">“This test gave me surprising insights and helped me prep for actual assessments.” – Nia, 22</div>
+</div>
   </div>
 
   <script>
@@ -197,9 +203,7 @@
         <h2>Your Estimated IQ: ${Math.round(estimatedIQ)}</h2>
         <p>You got ${score} out of ${questions.length} correct.</p>
         <p><strong>Want a full breakdown and performance analysis?</strong></p>
-        <a href="https://digitallaunchco.gumroad.com/l/qifnj" target="_blank" data-gumroad-overlay-checkout="true">
-          <button class="cta-button">Unlock My Full Report</button>
-        </a>
+        <a class="gumroad-button cta-button" href="https://digitallaunchco.gumroad.com/l/qifnj">Unlock My Full Report</a>
         <div class="testimonial">“This test gave me surprising insights and helped me prep for actual assessments.” – Nia, 22</div>
       `;
       resultBox.scrollIntoView({ behavior: "smooth" });
