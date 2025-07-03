@@ -6,13 +6,53 @@
   <title>IQForge – Quick IQ Test</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
+
+.progress-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 16px;
+  background: #e5e7eb;
+  z-index: 999;
+}
+
+.progress-bar {
+  height: 100%;
+  background: #2563eb;
+  width: 0%;
+  transition: width 0.4s ease-in-out;
+}
+
+/* Floating countdown timer */
+#countdown {
+  position: fixed;
+  top: 0.5rem;
+  right: 1rem;
+  background: #2563eb;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  font-weight: 600;
+  z-index: 1000;
+}
     body {
       font-family: 'Inter', sans-serif;
       background: linear-gradient(to right, #eef2f3, #ffffff);
       margin: 0;
-      padding: 2rem;
-      display: flex;
-      justify-content: center;
+      padding: 0;
+    }
+    .floating-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: #2563eb;
+      color: white;
+      text-align: center;
+      padding: 0.5rem;
+      font-weight: bold;
+      z-index: 1000;
     }
     .card {
       background: white;
@@ -21,8 +61,7 @@
       box-shadow: 0 10px 25px rgba(0,0,0,0.1);
       max-width: 800px;
       width: 100%;
-      position: relative;
-      margin-top: 2rem;
+      margin: 5rem auto;
     }
     h1 {
       text-align: center;
@@ -33,32 +72,6 @@
       text-align: center;
       margin-bottom: 1.5rem;
       color: #444;
-    }
-    .progress-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  background: #e5e7eb;
-  height: 16px;
-  z-index: 9999;
-}
-    .progress-bar {
-      height: 100%;
-      background: #2563eb;
-      width: 0%;
-      transition: width 0.4s ease-in-out;
-    }
-    .floating-timer {
-      position: fixed;
-      top: 1rem;
-      right: 1rem;
-      background: #2563eb;
-      color: white;
-      padding: 0.5rem 1rem;
-      border-radius: 999px;
-      font-weight: 600;
-      z-index: 999;
     }
     .question {
       margin-bottom: 1.5rem;
@@ -106,64 +119,49 @@
     .cta-button:hover {
       background: #059669;
     }
-    .testimonial {
-      background: #f0fdf4;
-      padding: 1rem;
-      border-left: 4px solid #10b981;
-      margin-top: 1.5rem;
-      font-style: italic;
-    }
   </style>
 </head>
 <body>
-  <div class="floating-timer" id="countdown">Time left: 7:00</div>
+  <div class="floating-bar" id="countdownBar">Time Left: 07:00</div>
   <div class="card">
+  <div id="countdown">Time left: 07:00</div>
     <h1>IQForge</h1>
     <p class="desc">Answer 20 logic-based questions to estimate your IQ score in under 7 minutes.</p>
-    <div class="progress-container">
-      <div class="progress-bar" id="progress-bar"></div>
-    </div>
     <div id="quiz-container"></div>
     <button id="submit-btn">Submit Answers</button>
-    <div id="result">
-  <h2>Your Estimated IQ: ${Math.round(estimatedIQ)}</h2>
-  <p>You got ${score} out of ${questions.length} correct.</p>
-  <p><strong>Want a full breakdown and performance analysis?</strong></p>
-  <a class="gumroad-button cta-button" href="https://digitallaunchco.gumroad.com/l/qifnj">Unlock My Full Report</a>
-  <div class="testimonial">“This test gave me surprising insights and helped me prep for actual assessments.” – Nia, 22</div>
-</div>
+    <div id="result"></div>
   </div>
 
+  <script src="https://gumroad.com/js/gumroad.js"></script>
   <script>
     const questions = [
-      { q: "What comes next in the sequence: 3, 6, 12, 24, ?", options: ["30", "36", "48", "54"], answer: "48" },
-      { q: "If some Smibs are Blibs and all Blibs are Cribs, are all Smibs definitely Cribs?", options: ["Yes", "No", "Cannot determine", "Only sometimes"], answer: "Cannot determine" },
-      { q: "Find the odd one out: Triangle, Circle, Square, Cylinder", options: ["Triangle", "Circle", "Square", "Cylinder"], answer: "Cylinder" },
-      { q: "Which number is missing? 16, 11, 7, 4, ?", options: ["2", "1", "0", "-1"], answer: "2" },
-      { q: "Rearrange the letters 'CIFAIPC' to form the name of a(n)…", options: ["City", "Animal", "Ocean", "Country"], answer: "Country" },
-      { q: "A clock shows 3:15. What is the angle between the hour and minute hand?", options: ["0°", "7.5°", "15°", "30°"], answer: "7.5°" },
-      { q: "If CAT is coded as 3120, how is DOG coded?", options: ["4157", "4158", "4185", "5148"], answer: "4158" },
-      { q: "Which figure completes the pattern? ▲ ▼ ▲ ▼ ?", options: ["▲", "▼", "■", "◆"], answer: "▲" },
-      { q: "Find the next prime after 43", options: ["47", "49", "51", "53"], answer: "47" },
-      { q: "Five people stand in line. How many different orders are possible?", options: ["60", "100", "120", "240"], answer: "120" },
-      { q: "What comes after: 2, 4, 8, 16, ?", options: ["18", "24", "32", "64"], answer: "32" },
-      { q: "Which word doesn't belong: Apple, Banana, Carrot, Mango", options: ["Apple", "Banana", "Carrot", "Mango"], answer: "Carrot" },
-      { q: "What is the square root of 144?", options: ["10", "12", "14", "16"], answer: "12" },
-      { q: "Which day comes next: Monday, Wednesday, Friday, ?", options: ["Saturday", "Sunday", "Monday", "Tuesday"], answer: "Sunday" },
-      { q: "What comes next in this letter series: A, C, E, G, ?", options: ["H", "I", "J", "K"], answer: "I" },
-      { q: "What is the capital of Canada?", options: ["Toronto", "Ottawa", "Montreal", "Vancouver"], answer: "Ottawa" },
-      { q: "Which is heavier: 1kg of iron or 1kg of feathers?", options: ["Iron", "Feathers", "Same", "Depends"], answer: "Same" },
-      { q: "Which number is divisible by 3: 22, 25, 27, 31", options: ["22", "25", "27", "31"], answer: "27" },
-      { q: "Which is not a primary color?", options: ["Red", "Blue", "Yellow", "Green"], answer: "Green" },
-      { q: "What is 15% of 200?", options: ["20", "25", "30", "35"], answer: "30" }
+      { q: "What comes next in the sequence? 2, 4, 8, 16, ?", options: ["20", "24", "32", "18"], answer: "32" },
+      { q: "If all Bloops are Razzies and all Razzies are Lazzies, are all Bloops definitely Lazzies?", options: ["Yes", "No", "Maybe", "Only some"], answer: "Yes" },
+      { q: "Which shape has the most sides?", options: ["Triangle", "Pentagon", "Hexagon", "Octagon"], answer: "Octagon" },
+      { q: "Mary is 16, four years older than her brother. How old will Mary be when he is 20?", options: ["20", "24", "26", "30"], answer: "24" },
+      { q: "Which number is the odd one out: 11, 13, 17, 19, 23, 25", options: ["11", "17", "23", "25"], answer: "25" },
+      { q: "Which day comes after Wednesday?", options: ["Monday", "Tuesday", "Thursday", "Friday"], answer: "Thursday" },
+      { q: "Which is heavier: 1kg of rocks or 1kg of feathers?", options: ["Rocks", "Feathers", "Same", "Depends"], answer: "Same" },
+      { q: "Find the next number in this pattern: 1, 1, 2, 3, 5, ?", options: ["8", "6", "10", "9"], answer: "8" },
+      { q: "Which letter is missing: A, C, E, G, ?", options: ["H", "I", "J", "K"], answer: "I" },
+      { q: "If 3 cats catch 3 mice in 3 minutes, how many cats are needed to catch 100 mice in 100 minutes?", options: ["3", "30", "100", "1"], answer: "3" },
+      { q: "John’s father has 5 sons: A, B, C, D. What is the name of the 5th?", options: ["E", "F", "John", "Z"], answer: "John" },
+      { q: "What is the square root of 144?", options: ["10", "11", "12", "13"], answer: "12" },
+      { q: "Which is not a prime number?", options: ["7", "9", "11", "13"], answer: "9" },
+      { q: "How many sides does a decagon have?", options: ["6", "8", "10", "12"], answer: "10" },
+      { q: "Which is the largest?", options: ["0.9", "0.99", "0.999", "1"], answer: "1" },
+      { q: "Which month has 28 days?", options: ["February", "All", "None", "January"], answer: "All" },
+      { q: "What number is 1/4 of 100?", options: ["25", "20", "30", "40"], answer: "25" },
+      { q: "A clock shows 3:15. What is the angle between the hour and minute hands?", options: ["0°", "7.5°", "90°", "45°"], answer: "7.5°" },
+      { q: "Which is not a vowel?", options: ["A", "E", "I", "Y"], answer: "Y" },
+      { q: "What is 7 x 8?", options: ["54", "56", "58", "60"], answer: "56" }
     ];
 
     const quizContainer = document.getElementById("quiz-container");
     const submitBtn = document.getElementById("submit-btn");
     const resultBox = document.getElementById("result");
-    const progressBar = document.getElementById("progress-bar");
+    const countdownBar = document.getElementById("countdownBar");
 
-    // Render questions
     questions.forEach((item, index) => {
       const div = document.createElement("div");
       div.classList.add("question");
@@ -174,24 +172,7 @@
       quizContainer.appendChild(div);
     });
 
-    // Progress tracking
-    let answeredCount = 0;
-    questions.forEach((item, i) => {
-      const inputs = document.getElementsByName(`q${i}`);
-      inputs.forEach(input => {
-        input.addEventListener('change', () => {
-          const alreadyAnswered = [...inputs].some(r => r.dataset.answered === "true");
-          if (!alreadyAnswered) {
-            answeredCount++;
-            inputs.forEach(r => r.dataset.answered = "true");
-          }
-          progressBar.style.width = `${Math.round((answeredCount / questions.length) * 100)}%`;
-        });
-      });
-    });
-
-    // Submit logic
-    function submitQuiz() {
+    function calculateScore() {
       let score = 0;
       questions.forEach((item, i) => {
         const selected = document.querySelector(`input[name=q${i}]:checked`);
@@ -199,35 +180,47 @@
           score++;
         }
       });
-      const estimatedIQ = 80 + score * 2.5;
+
       resultBox.style.display = "block";
       resultBox.innerHTML = `
-        <h2>Your Estimated IQ: ${Math.round(estimatedIQ)}</h2>
-        <p>You got ${score} out of ${questions.length} correct.</p>
-        <p><strong>Want a full breakdown and performance analysis?</strong></p>
-        <a class="gumroad-button cta-button" href="https://digitallaunchco.gumroad.com/l/qifnj">Unlock My Full Report</a>
-        <div class="testimonial">“This test gave me surprising insights and helped me prep for actual assessments.” – Nia, 22</div>
+        <h2>Your IQ Score is ready.</h2>
+        <p><strong>Unlock your score + full analysis below.</strong></p>
+        <a class="gumroad-button" href="https://digitallaunchco.gumroad.com/l/qifnj" data-gumroad-overlay-checkout="true">Unlock My IQ Score</a>
       `;
       resultBox.scrollIntoView({ behavior: "smooth" });
     }
 
-    submitBtn.onclick = submitQuiz;
+    submitBtn.onclick = calculateScore;
 
     // Timer logic
-    let totalSeconds = 420;
-    const countdownEl = document.getElementById("countdown");
-    const timer = setInterval(() => {
-      const minutes = Math.floor(totalSeconds / 60);
-      const seconds = totalSeconds % 60;
-      countdownEl.textContent = `Time left: ${minutes}:${seconds.toString().padStart(2, '0')}`;
-      totalSeconds--;
-      if (totalSeconds < 0) {
+    let totalTime = 420; // 7 minutes in seconds
+    function updateCountdown() {
+      const minutes = String(Math.floor(totalTime / 60)).padStart(2, '0');
+      const seconds = String(totalTime % 60).padStart(2, '0');
+      countdownBar.textContent = `Time Left: ${minutes}:${seconds}`;
+      if (totalTime <= 0) {
+        calculateScore();
         clearInterval(timer);
-        submitQuiz();
       }
-    }, 1000);
+      totalTime--;
+    }
+    const timer = setInterval(updateCountdown, 1000);
+
+let totalTime = 420; // 7 minutes in seconds
+const countdownEl = document.getElementById("countdown");
+
+const countdownInterval = setInterval(() => {
+  const minutes = Math.floor(totalTime / 60).toString().padStart(2, '0');
+  const seconds = (totalTime % 60).toString().padStart(2, '0');
+  countdownEl.textContent = `Time left: ${minutes}:${seconds}`;
+  totalTime--;
+
+  if (totalTime < 0) {
+    clearInterval(countdownInterval);
+    document.getElementById("submit-btn").click(); // auto-submit on timeout
+  }
+}, 1000);
   </script>
-  <script src="https://gumroad.com/js/gumroad.js"></script>
 </body>
 </html>
 
