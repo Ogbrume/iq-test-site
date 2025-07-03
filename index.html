@@ -129,6 +129,16 @@
   </div>
 
   <script>
+
+    window.addEventListener("DOMContentLoaded", () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get("unlocked") === "true") {
+    const licenseSection = document.getElementById("license-section");
+    if (licenseSection) {
+      licenseSection.style.display = "block";
+    }
+  }
+});
     const questions = [
       { q: "What comes next in the sequence: 3, 6, 12, 24, ?", options: ["30", "36", "48", "54"], answer: "48" },
       { q: "If some Smibs are Blibs and all Blibs are Cribs, are all Smibs definitely Cribs?", options: ["Yes", "No", "Cannot determine", "Only sometimes"], answer: "Cannot determine" },
