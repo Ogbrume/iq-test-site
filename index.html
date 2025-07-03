@@ -200,25 +200,47 @@
     }
   });
   const estimatedIQ = 80 + score * 2.5;
-  resultBox.style.display = "block";
+
   resultBox.innerHTML = `
-    <h2 id="blurred-iq" style="filter: blur(5px); transition: 0.3s;">Your Estimated IQ: ${Math.round(estimatedIQ)}</h2>
-    <p>You got ${score} out of ${questions.length} correct.</p>
-    <p><strong>Want a full breakdown and performance analysis?</strong></p>
-    <a class="gumroad-button cta-button" href="https://digitallaunchco.gumroad.com/l/qifnj" data-gumroad-overlay-checkout="true">Unlock My Full Report</a>
+    <div id="score-section" style="filter: blur(8px); pointer-events: none; user-select: none;">
+      <h2>Your Estimated IQ: <span id="iq-score">${Math.round(estimatedIQ)}</span></h2>
+      <p>You got <span id="score">${score}</span> out of ${questions.length} correct.</p>
+    </div>
+    <p><strong>Want to unlock your full score?</strong></p>
+    <input type="text" id="license-key" placeholder="Enter your Gumroad license key" style="padding: 0.5rem; margin-top: 1rem; width: 100%; border: 1px solid #ccc; border-radius: 5px;">
+    <button class="cta-button" onclick="unlockScore()">Unlock My Score</button>
     <div class="testimonial">“This test gave me surprising insights and helped me prep for actual assessments.” – Nia, 22</div>
   `;
-  resultBox.scrollIntoView({ behavior: "smooth" });
 
-  // Add unlock event listener
-  setTimeout(() => {
-    const unlockBtn = document.querySelector('.gumroad-button');
-    unlockBtn?.addEventListener('click', () => {
-      document.getElementById('blurred-iq').style.filter = 'none';
-    });
-  }, 100);
+  resultBox.style.display = "block";
+  resultBox.scrollIntoView({ behavior: "smooth" });
 }
 
+    function unlockScore() {
+  const key = document.getElementById('license-key').value.trim();
+
+  fetch(`https://api.gumroad.com/v2/licenses/verify`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      product_permalink: "qifnj",
+      license_key: key
+    })
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        document.getElementById("score-section").style.filter = "none";
+        document.getElementById("score-section").style.pointerEvents = "auto";
+        document.getElementById("score-section").style.userSelect = "auto";
+        alert("Your result is now unlocked!");
+      } else {
+        alert("Invalid license key. Please check and try again.");
+      }
+    })
+    .catch(() => alert("There was an error verifying your key. Please try again later."));
+}
+    
     submitBtn.onclick = submitQuiz;
 
     // Timer logic
