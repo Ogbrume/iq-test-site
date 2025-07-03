@@ -126,6 +126,11 @@
     <div id="quiz-container"></div>
     <button id="submit-btn">Submit Answers</button>
     <div id="result"></div>
+    <div id="license-key-container" style="display:none; margin-top: 2rem;">
+  <p><strong>Thanks for your purchase!</strong> Enter your license key below to unlock your result.</p>
+  <input type="text" id="licenseKey" placeholder="Enter your Gumroad license key" style="padding: 0.5rem; width: 100%; max-width: 600px;" />
+  <button class="cta-button" style="margin-top: 0.5rem;" onclick="unlockScore()">Unlock My Score</button>
+</div>
   </div>
 
   <script>
@@ -133,9 +138,19 @@
     window.addEventListener("DOMContentLoaded", () => {
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get("unlocked") === "true") {
-    const licenseSection = document.getElementById("license-section");
-    if (licenseSection) {
-      licenseSection.style.display = "block";
+    const licensePopup = document.getElementById("license-key-container");
+    if (licensePopup) {
+      licensePopup.style.display = "block";
+      licensePopup.scrollIntoView({ behavior: "smooth" });
+
+      const resultBox = document.getElementById("result");
+      if (resultBox) {
+        resultBox.innerHTML = `
+          <p><strong>Welcome back!</strong> If you’ve already taken the test, enter your license key below to unlock your result.</p>
+          <p>If you haven’t taken the test yet, scroll up and complete it first.</p>
+        `;
+        resultBox.style.display = "block";
+      }
     }
   }
 });
