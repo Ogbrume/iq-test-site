@@ -125,13 +125,7 @@
     </div>
     <div id="quiz-container"></div>
     <button id="submit-btn">Submit Answers</button>
-    <div id="result">
-  <h2>Your Estimated IQ: ${Math.round(estimatedIQ)}</h2>
-  <p>You got ${score} out of ${questions.length} correct.</p>
-  <p><strong>Want a full breakdown and performance analysis?</strong></p>
-  <a class="gumroad-button cta-button" href="https://digitallaunchco.gumroad.com/l/qifnj">Unlock My Full Report</a>
-  <div class="testimonial">“This test gave me surprising insights and helped me prep for actual assessments.” – Nia, 22</div>
-</div>
+    <div id="result"></div>
   </div>
 
   <script>
@@ -206,9 +200,19 @@
       <h2>Your Estimated IQ: <span id="iq-score">${Math.round(estimatedIQ)}</span></h2>
       <p>You got <span id="score">${score}</span> out of ${questions.length} correct.</p>
     </div>
-    <p><strong>Want to unlock your full score?</strong></p>
-    <input type="text" id="license-key" placeholder="Enter your Gumroad license key" style="padding: 0.5rem; margin-top: 1rem; width: 100%; border: 1px solid #ccc; border-radius: 5px;">
-    <button class="cta-button" onclick="unlockScore()">Unlock My Score</button>
+   <div id="gumroad-purchase-section" style="margin-top: 1rem;">
+  <p><strong>Want to unlock your full score?</strong></p>
+  <a class="gumroad-button cta-button" href="https://digitallaunchco.gumroad.com/l/qifnj" data-gumroad-overlay-checkout="true">Purchase to Unlock Score</a>
+  
+  <p style="margin-top: 0.75rem;">
+    <a href="#" onclick="document.getElementById('license-section').style.display='block'; this.style.display='none'; return false;">Already have a key?</a>
+  </p>
+  
+  <div id="license-section" style="display:none; margin-top: 0.5rem;">
+    <input type="text" id="licenseKey" placeholder="Enter your Gumroad license key" style="padding: 0.5rem; width: 100%; max-width: 600px;" />
+    <button class="cta-button" style="margin-top: 0.5rem;" onclick="unlockScore()">Unlock My Score</button>
+  </div>
+</div>
     <div class="testimonial">“This test gave me surprising insights and helped me prep for actual assessments.” – Nia, 22</div>
   `;
 
@@ -217,7 +221,7 @@
 }
 
     function unlockScore() {
-  const key = document.getElementById('license-key').value.trim();
+  const key = document.getElementById('licenseKey').value.trim();
 
   fetch(`https://api.gumroad.com/v2/licenses/verify`, {
     method: "POST",
@@ -230,13 +234,23 @@
     .then(res => res.json())
     .then(data => {
       if (data.success) {
-        document.getElementById("score-section").style.filter = "none";
-        document.getElementById("score-section").style.pointerEvents = "auto";
-        document.getElementById("score-section").style.userSelect = "auto";
-        alert("Your result is now unlocked!");
-      } else {
-        alert("Invalid license key. Please check and try again.");
-      }
+  const scoreSection = document.getElementById("score-section");
+  if (scoreSection) {
+    scoreSection.style.filter = "none";
+    scoreSection.style.pointerEvents = "auto";
+    scoreSection.style.userSelect = "auto";
+    alert("Your result is now unlocked!");
+
+    // Optional enhancement: clean up the UI
+    document.getElementById("license-section").style.display = "none";
+    const gumroadButton = document.querySelector("#gumroad-purchase-section .gumroad-button");
+    if (gumroadButton) gumroadButton.style.display = "none";
+  } else {
+    alert("Please complete the quiz first before unlocking your score.");
+  }
+} else {
+  alert("Invalid license key. Please check and try again.");
+}
     })
     .catch(() => alert("There was an error verifying your key. Please try again later."));
 }
