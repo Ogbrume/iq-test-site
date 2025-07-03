@@ -192,24 +192,32 @@
 
     // Submit logic
     function submitQuiz() {
-      let score = 0;
-      questions.forEach((item, i) => {
-        const selected = document.querySelector(`input[name=q${i}]:checked`);
-        if (selected && selected.value === item.answer) {
-          score++;
-        }
-      });
-      const estimatedIQ = 80 + score * 2.5;
-      resultBox.style.display = "block";
-      resultBox.innerHTML = `
-        <h2>Your Estimated IQ: ${Math.round(estimatedIQ)}</h2>
-        <p>You got ${score} out of ${questions.length} correct.</p>
-        <p><strong>Want a full breakdown and performance analysis?</strong></p>
-        <a class="gumroad-button cta-button" href="https://digitallaunchco.gumroad.com/l/qifnj">Unlock My Full Report</a>
-        <div class="testimonial">“This test gave me surprising insights and helped me prep for actual assessments.” – Nia, 22</div>
-      `;
-      resultBox.scrollIntoView({ behavior: "smooth" });
+  let score = 0;
+  questions.forEach((item, i) => {
+    const selected = document.querySelector(`input[name=q${i}]:checked`);
+    if (selected && selected.value === item.answer) {
+      score++;
     }
+  });
+  const estimatedIQ = 80 + score * 2.5;
+  resultBox.style.display = "block";
+  resultBox.innerHTML = `
+    <h2 id="blurred-iq" style="filter: blur(5px); transition: 0.3s;">Your Estimated IQ: ${Math.round(estimatedIQ)}</h2>
+    <p>You got ${score} out of ${questions.length} correct.</p>
+    <p><strong>Want a full breakdown and performance analysis?</strong></p>
+    <a class="gumroad-button cta-button" href="https://digitallaunchco.gumroad.com/l/qifnj" data-gumroad-overlay-checkout="true">Unlock My Full Report</a>
+    <div class="testimonial">“This test gave me surprising insights and helped me prep for actual assessments.” – Nia, 22</div>
+  `;
+  resultBox.scrollIntoView({ behavior: "smooth" });
+
+  // Add unlock event listener
+  setTimeout(() => {
+    const unlockBtn = document.querySelector('.gumroad-button');
+    unlockBtn?.addEventListener('click', () => {
+      document.getElementById('blurred-iq').style.filter = 'none';
+    });
+  }, 100);
+}
 
     submitBtn.onclick = submitQuiz;
 
