@@ -6,6 +6,11 @@
   <title>Unlock Your IQ Score – IQForge</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
+
+    html, body {
+  height: 100%;
+  overflow-y: auto;
+}
     body {
       font-family: 'Inter', sans-serif;
       display: flex;
@@ -42,18 +47,24 @@
       border-radius: 4px;
       cursor: pointer;
     }
-    #score-display {
-      margin-top: 2rem;
-      font-size: 1.5rem;
-      color: #10b981;
-      font-weight: bold;
-    }
+        #score-display {
+  margin-top: 2rem;
+  font-size: 1.5rem;
+  color: #10b981;
+  font-weight: bold;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+#score-display.show {
+  opacity: 1;
+}
 
     .fade-out {
     opacity: 0;
     transition: opacity 0.5s ease;
     pointer-events: none;
   }
+    
   </style>
 </head>
 <body>
@@ -68,6 +79,9 @@
   <script>
     function unlock() {
       const key = document.getElementById("licenseKey").value.trim();
+      const button = document.querySelector("button");
+button.disabled = true;
+button.textContent = "Verifying...";
       const storedScore = localStorage.getItem("iqScore");
       const correct = localStorage.getItem("correctAnswers");
 
@@ -87,7 +101,9 @@
   🎉 Your estimated IQ is <strong>${storedScore}</strong><br/>
   You got <strong>${correct}</strong> out of 20 correct.
 `;
-              document.getElementById("score-display").style.display = "block";
+              const scoreDisplay = document.getElementById("score-display");
+scoreDisplay.style.display = "block";
+scoreDisplay.classList.add("show");
               document.querySelector("input").classList.add("fade-out");
 document.querySelector("button").classList.add("fade-out");
 
@@ -102,9 +118,15 @@ document.querySelector("button").classList.add("fade-out");
             }
           } else {
             alert("Invalid license key. Please check and try again.");
+            button.disabled = false;
+button.textContent = "Unlock Score";
           }
         })
-        .catch(() => alert("There was a problem verifying your key."));
+        .catch(() => {
+  alert("There was a problem verifying your key.");
+  button.disabled = false;
+  button.textContent = "Unlock Score";
+});
     }
   </script>
 </body>
