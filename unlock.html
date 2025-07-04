@@ -48,6 +48,12 @@
       color: #10b981;
       font-weight: bold;
     }
+
+    .fade-out {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+  }
   </style>
 </head>
 <body>
@@ -62,7 +68,8 @@
   <script>
     function unlock() {
       const key = document.getElementById("licenseKey").value.trim();
-      const storedScore = localStorage.getItem("userIQScore");
+      const storedScore = localStorage.getItem("iqScore");
+      const correct = localStorage.getItem("correctAnswers");
 
       fetch("https://api.gumroad.com/v2/licenses/verify", {
         method: "POST",
@@ -76,8 +83,19 @@
         .then(data => {
           if (data.success) {
             if (storedScore) {
-              document.getElementById("score-display").innerHTML = `🎉 Your estimated IQ is <strong>${storedScore}</strong>`;
+              document.getElementById("score-display").innerHTML = `
+  🎉 Your estimated IQ is <strong>${storedScore}</strong><br/>
+  You got <strong>${correct}</strong> out of 20 correct.
+`;
               document.getElementById("score-display").style.display = "block";
+              document.querySelector("input").classList.add("fade-out");
+document.querySelector("button").classList.add("fade-out");
+
+              setTimeout(() => {
+  document.querySelector("input").style.display = "none";
+  document.querySelector("button").style.display = "none";
+}, 500); 
+              
             } else {
               document.getElementById("score-display").innerHTML = `No score found. Please take the test first.`;
               document.getElementById("score-display").style.display = "block";
