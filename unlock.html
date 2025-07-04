@@ -29,6 +29,13 @@
       width: 90%;
       text-align: center;
     }
+
+    @media (max-width: 480px) {
+  .container {
+    padding: 1.25rem;
+  }
+}
+    
     input {
       padding: 0.75rem;
       width: 100%;
@@ -53,10 +60,13 @@
   color: #10b981;
   font-weight: bold;
   opacity: 0;
-  transition: opacity 0.5s ease;
+  transform: scale(0.95);
+  transition: opacity 0.5s ease, transform 0.5s ease;
 }
+
 #score-display.show {
   opacity: 1;
+  transform: scale(1);
 }
 
     .fade-out {
@@ -64,6 +74,16 @@
     transition: opacity 0.5s ease;
     pointer-events: none;
   }
+
+    .fade-in {
+  opacity: 0;
+  animation: fadeIn ease 0.6s forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
     
   </style>
 </head>
@@ -96,14 +116,26 @@ button.textContent = "Verifying...";
         .then(res => res.json())
         .then(data => {
           if (data.success) {
-            if (storedScore) {
-             const scoreDisplay = document.getElementById("score-display");
-scoreDisplay.innerHTML = `
-  🎉 Your estimated IQ is <strong id="animatedScore">0</strong><br/>
-  You got <strong>${correct}</strong> out of 20 correct.
-`;
-scoreDisplay.style.display = "block";
-scoreDisplay.classList.add("show");
+  if (!storedScore) {
+  const scoreDisplay = document.getElementById("score-display");
+  scoreDisplay.className = ""; // Clean up
+  scoreDisplay.innerHTML = `No score found. Please take the test first.`;
+  scoreDisplay.style.display = "block";
+  scoreDisplay.classList.add("fade-in");
+
+  button.disabled = false;
+  button.textContent = "Unlock Score";
+  return;
+}
+
+  const scoreDisplay = document.getElementById("score-display");
+  scoreDisplay.className = "";
+  scoreDisplay.innerHTML = `
+    🎉 Your estimated IQ is <strong id="animatedScore">0</strong><br/>
+    You got <strong>${correct}</strong> out of 20 correct.
+  `;
+  scoreDisplay.style.display = "block";
+  scoreDisplay.classList.add("show");
 
 // Animate the score from 0 to storedScore
 let current = 0;
@@ -131,14 +163,10 @@ setTimeout(() => {
   document.getElementById("licenseInstruction").style.display = "none";
 }, 500);
               
-            } else {
-              document.getElementById("score-display").innerHTML = `No score found. Please take the test first.`;
-              document.getElementById("score-display").style.display = "block";
-            }
           } else {
             alert("Invalid license key. Please check and try again.");
             button.disabled = false;
-button.textContent = "Unlock Score";
+            button.textContent = "Unlock Score";
           }
         })
         .catch(() => {
@@ -147,6 +175,10 @@ button.textContent = "Unlock Score";
   button.textContent = "Unlock Score";
 });
     }
+
+    window.onload = () => {
+  document.getElementById("licenseKey").focus();
+};
   </script>
 </body>
 </html>
