@@ -245,37 +245,38 @@
   resultBox.scrollIntoView({ behavior: "smooth" });
 }
 
-    function unlockScore() {
+ function unlockScore() {
   const key = document.getElementById('licenseKey').value.trim();
 
   fetch(`https://api.gumroad.com/v2/licenses/verify`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      product_id: "9KmxNg7UBe31q2KVdpSwpQ==",
+      product_permalink: "qifnj",
       license_key: key
     })
   })
     .then(res => res.json())
     .then(data => {
       if (data.success) {
-  const scoreSection = document.getElementById("score-section");
-  if (scoreSection) {
-    scoreSection.style.filter = "none";
-    scoreSection.style.pointerEvents = "auto";
-    scoreSection.style.userSelect = "auto";
-    alert("Your result is now unlocked!");
+        const scoreSection = document.getElementById("score-section");
 
-    // Optional enhancement: clean up the UI
-    document.getElementById("license-section").style.display = "none";
-    const gumroadButton = document.querySelector("#gumroad-purchase-section .gumroad-button");
-    if (gumroadButton) gumroadButton.style.display = "none";
-  } else {
-    alert("Please complete the quiz first before unlocking your score.");
-  }
-} else {
-  alert("Invalid license key. Please check and try again.");
-}
+        // Unlock score if it exists
+        if (scoreSection) {
+          scoreSection.style.filter = "none";
+          scoreSection.style.pointerEvents = "auto";
+          scoreSection.style.userSelect = "auto";
+        }
+
+        alert("Your result is now unlocked!");
+
+        // Clean up UI regardless
+        document.getElementById("license-section").style.display = "none";
+        const gumroadButton = document.querySelector("#gumroad-purchase-section .gumroad-button");
+        if (gumroadButton) gumroadButton.style.display = "none";
+      } else {
+        alert("Invalid license key. Please check and try again.");
+      }
     })
     .catch(() => alert("There was an error verifying your key. Please try again later."));
 }
