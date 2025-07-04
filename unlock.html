@@ -89,7 +89,7 @@
 </head>
 <body>
   <div class="container">
-    <h2>Unlock Your IQ Score</h2>
+    <h2 id="mainHeading">Unlock Your IQ Score</h2>
     <p id="licenseInstruction">Enter your Gumroad license key to see your full results.</p>
     <input type="text" id="licenseKey" placeholder="Enter your license key" onkeypress="if(event.key === 'Enter') unlock()" />
     <button onclick="unlock()">Unlock Score</button>
@@ -156,11 +156,13 @@ const interval = setInterval(() => {
               document.querySelector("input").classList.add("fade-out");
 document.querySelector("button").classList.add("fade-out");
 document.getElementById("licenseInstruction").classList.add("fade-out");
+document.getElementById("mainHeading").classList.add("fade-out");            
 
 setTimeout(() => {
   document.querySelector("input").style.display = "none";
   document.querySelector("button").style.display = "none";
   document.getElementById("licenseInstruction").style.display = "none";
+  document.getElementById("mainHeading").style.display = "none";
 }, 500);
               
           } else {
