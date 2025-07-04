@@ -70,8 +70,8 @@
 <body>
   <div class="container">
     <h2>Unlock Your IQ Score</h2>
-    <p>Enter your Gumroad license key to see your full results.</p>
-    <input type="text" id="licenseKey" placeholder="Enter your license key" />
+    <p id="licenseInstruction">Enter your Gumroad license key to see your full results.</p>
+    <input type="text" id="licenseKey" placeholder="Enter your license key" onkeypress="if(event.key === 'Enter') unlock()" />
     <button onclick="unlock()">Unlock Score</button>
     <div id="score-display" style="display:none;" aria-live="polite"></div>
   </div>
@@ -97,20 +97,39 @@ button.textContent = "Verifying...";
         .then(data => {
           if (data.success) {
             if (storedScore) {
-              document.getElementById("score-display").innerHTML = `
-  🎉 Your estimated IQ is <strong>${storedScore}</strong><br/>
+             const scoreDisplay = document.getElementById("score-display");
+scoreDisplay.innerHTML = `
+  🎉 Your estimated IQ is <strong id="animatedScore">0</strong><br/>
   You got <strong>${correct}</strong> out of 20 correct.
 `;
-              const scoreDisplay = document.getElementById("score-display");
 scoreDisplay.style.display = "block";
 scoreDisplay.classList.add("show");
+
+// Animate the score from 0 to storedScore
+let current = 0;
+const finalScore = parseInt(storedScore);
+const duration = 1200; // animation duration in ms
+const frameRate = 30; // ms between frames
+const steps = Math.ceil(duration / frameRate);
+const increment = Math.max(1, Math.ceil(finalScore / steps));
+
+const interval = setInterval(() => {
+  current += increment;
+  if (current >= finalScore) {
+    current = finalScore;
+    clearInterval(interval);
+  }
+  document.getElementById("animatedScore").textContent = current;
+}, frameRate);
               document.querySelector("input").classList.add("fade-out");
 document.querySelector("button").classList.add("fade-out");
+document.getElementById("licenseInstruction").classList.add("fade-out");
 
-              setTimeout(() => {
+setTimeout(() => {
   document.querySelector("input").style.display = "none";
   document.querySelector("button").style.display = "none";
-}, 500); 
+  document.getElementById("licenseInstruction").style.display = "none";
+}, 500);
               
             } else {
               document.getElementById("score-display").innerHTML = `No score found. Please take the test first.`;
