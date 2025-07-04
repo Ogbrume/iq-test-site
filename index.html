@@ -220,31 +220,27 @@
   });
   const estimatedIQ = 80 + score * 2.5;
 
+  // Save to localStorage
+  localStorage.setItem("iqScore", Math.round(estimatedIQ));
+  localStorage.setItem("correctAnswers", score);
+
   resultBox.innerHTML = `
     <div id="score-section" style="filter: blur(8px); pointer-events: none; user-select: none;">
       <h2>Your Estimated IQ: <span id="iq-score">${Math.round(estimatedIQ)}</span></h2>
       <p>You got <span id="score">${score}</span> out of ${questions.length} correct.</p>
     </div>
-   <div id="gumroad-purchase-section" style="margin-top: 1rem;">
-  <p><strong>Want to unlock your full score?</strong></p>
-  <a class="gumroad-button cta-button" href="https://digitallaunchco.gumroad.com/l/qifnj" data-gumroad-overlay-checkout="true">Purchase to Unlock Score</a>
-  
-  <p style="margin-top: 0.75rem;">
-    <a href="#" onclick="document.getElementById('license-section').style.display='block'; this.style.display='none'; return false;">Already have a key?</a>
-  </p>
-  
-  <div id="license-section" style="display:none; margin-top: 0.5rem;">
-    <input type="text" id="licenseKey" placeholder="Enter your Gumroad license key" style="padding: 0.5rem; width: 100%; max-width: 600px;" />
-    <button class="cta-button" style="margin-top: 0.5rem;" onclick="unlockScore()">Unlock My Score</button>
-  </div>
-</div>
-    <div class="testimonial">“The questions made me think hard, and the result felt accurate. I’d recommend it to anyone curious about their IQ.” – Nia, 22</div>
+    <div id="gumroad-purchase-section" style="margin-top: 1rem;">
+      <p><strong>Want to unlock your full score?</strong></p>
+      <a class="gumroad-button cta-button" href="https://digitallaunchco.gumroad.com/l/qifnj" data-gumroad-overlay-checkout="true">Purchase to Unlock Score</a>
+      <p style="margin-top: 0.75rem;">
+        <a href="/unlock.html">Already have a license key?</a>
+      </p>
+    </div>
   `;
 
   resultBox.style.display = "block";
   resultBox.scrollIntoView({ behavior: "smooth" });
 }
-
  function unlockScore() {
   const key = document.getElementById('licenseKey').value.trim();
 
