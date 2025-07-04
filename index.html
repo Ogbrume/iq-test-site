@@ -113,6 +113,15 @@
       margin-top: 1.5rem;
       font-style: italic;
     }
+
+    .blurred {
+  filter: blur(6px);
+  display: inline-block;
+  width: 3ch;
+  text-align: center;
+  user-select: none;
+}
+
   </style>
 </head>
 <body>
@@ -225,10 +234,10 @@
   localStorage.setItem("correctAnswers", score);
 
   resultBox.innerHTML = `
-    <div id="score-section" style="filter: blur(8px); pointer-events: none; user-select: none;">
-      <h2>Your Estimated IQ: <span id="iq-score">${Math.round(estimatedIQ)}</span></h2>
-      <p>You got <span id="score">${score}</span> out of ${questions.length} correct.</p>
-    </div>
+  <div id="score-section">
+    <h2>Your Estimated IQ: <span class="blurred" aria-hidden="true"><span id="iq-score">${Math.round(estimatedIQ)}</span></span></h2>
+    <p>You got <span id="score">${score}</span> out of ${questions.length} correct.</p>
+  </div>
     <div id="gumroad-purchase-section" style="margin-top: 1rem;">
       <p><strong>Want to unlock your full score?</strong></p>
       <a class="gumroad-button cta-button" href="https://digitallaunchco.gumroad.com/l/qifnj" data-gumroad-overlay-checkout="true">Purchase to Unlock Score</a>
@@ -255,14 +264,10 @@
     .then(res => res.json())
     .then(data => {
       if (data.success) {
-        const scoreSection = document.getElementById("score-section");
-
-        // Unlock score if it exists
-        if (scoreSection) {
-          scoreSection.style.filter = "none";
-          scoreSection.style.pointerEvents = "auto";
-          scoreSection.style.userSelect = "auto";
-        }
+        const iqScoreSpan = document.querySelector(".blurred");
+if (iqScoreSpan) {
+  iqScoreSpan.classList.remove("blurred");
+}
 
         alert("Your result is now unlocked!");
 
