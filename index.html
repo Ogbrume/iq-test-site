@@ -122,12 +122,12 @@
   user-select: none;
 }
 
-   a.gumroad-button.cta-button {
+  a.gumroad-button.cta-button {
   all: unset;
-  display: inline-block;
+  display: block;
   background: linear-gradient(135deg, #10b981, #059669);
   color: white;
-  padding: 0.5rem 1.25rem;
+  padding: 0.75rem 1rem;
   font-size: 1rem;
   font-weight: 600;
   border-radius: 8px;
@@ -137,7 +137,9 @@
   transition: all 0.3s ease;
   cursor: pointer;
   width: 100%;
-  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  margin-top: 0.75rem;
 }
 
 a.gumroad-button.cta-button:hover {
@@ -268,12 +270,14 @@ a.gumroad-button.cta-button:hover {
   </div>
     <div id="gumroad-purchase-section" style="margin-top: 1rem;">
       <p><strong>Want to unlock your full score?</strong></p>
-      <a class="gumroad-button cta-button"
-   href="https://digitallaunchco.gumroad.com/l/qifnj?wanted=true"
-   data-gumroad-single-product="true"
-   data-gumroad-custom-button="true">
-   🔓 Unlock Your Score
-</a>
+      <div style="padding: 0 0.5rem;">
+  <a class="gumroad-button cta-button"
+     href="https://digitallaunchco.gumroad.com/l/qifnj?wanted=true"
+     data-gumroad-single-product="true"
+     data-gumroad-custom-button="true">
+     🔓 Unlock Your Score
+  </a>
+</div>
       <p style="margin-top: 0.75rem;">
         <a href="/unlock.html">Already have a license key?</a>
       </p>
