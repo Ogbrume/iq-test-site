@@ -50,6 +50,7 @@
       transition: width 0.4s ease-in-out;
     }
     .floating-timer {
+      display: none; /* hide by default */
       position: fixed;
       top: 1rem;
       right: 1rem;
@@ -203,6 +204,20 @@ a.gumroad-button.cta-button:hover {
   }
 });
      function startQuiz() {
+ // SHOW the timer and START it
+document.getElementById("countdown").style.display = "block";
+let totalSeconds = 420;
+const countdownEl = document.getElementById("countdown");
+const timer = setInterval(() => {
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  countdownEl.textContent = `Time left: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+  totalSeconds--;
+  if (totalSeconds < 0) {
+    clearInterval(timer);
+    submitQuiz();
+  }
+}, 1000);
   const ageInput = document.getElementById("ageInput");
   const age = parseInt(ageInput.value.trim(), 10);
 
@@ -365,18 +380,18 @@ if (iqScoreSpan) {
     submitBtn.onclick = submitQuiz;
 
     // Timer logic
-    let totalSeconds = 420;
-    const countdownEl = document.getElementById("countdown");
-    const timer = setInterval(() => {
-      const minutes = Math.floor(totalSeconds / 60);
-      const seconds = totalSeconds % 60;
-      countdownEl.textContent = `Time left: ${minutes}:${seconds.toString().padStart(2, '0')}`;
-      totalSeconds--;
-      if (totalSeconds < 0) {
-        clearInterval(timer);
-        submitQuiz();
+    //let totalSeconds = 420;
+    //const countdownEl = document.getElementById("countdown");
+    //const timer = setInterval(() => {
+      //const minutes = Math.floor(totalSeconds / 60);
+      //const seconds = totalSeconds % 60;
+      //countdownEl.textContent = `Time left: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+      //totalSeconds--;
+      //if (totalSeconds < 0) {
+        //clearInterval(timer);
+        //submitQuiz();
       }
-    }, 1000);
+    }, //1000);
 
   </script>
   <script src="https://gumroad.com/js/gumroad.js"></script>
