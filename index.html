@@ -336,16 +336,22 @@ if (iqScoreSpan) {
   <script src="https://gumroad.com/js/gumroad.js"></script>
 
   <script>
+  // Wait for the DOM *and* Gumroad script to be ready
   document.addEventListener("DOMContentLoaded", function () {
-    const gumroadBtn = document.getElementById("custom-gumroad-btn");
-    if (gumroadBtn) {
-      gumroadBtn.addEventListener("click", function () {
-        GumroadOverlay.open({
-          product_permalink: "qifnj", // 👈 Replace with your actual product slug if different
-          offer_code: null
+    const observer = new MutationObserver(() => {
+      const gumroadBtn = document.getElementById("custom-gumroad-btn");
+      if (gumroadBtn && typeof GumroadOverlay !== 'undefined') {
+        gumroadBtn.addEventListener("click", function () {
+          GumroadOverlay.open({
+            product_permalink: "qifnj",
+            offer_code: null
+          });
         });
-      });
-    }
+        observer.disconnect(); // Stop watching once it binds
+      }
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
   });
 </script>
   
