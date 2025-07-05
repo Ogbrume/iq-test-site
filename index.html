@@ -279,6 +279,14 @@ a.gumroad-button.cta-button:hover {
         });
       });
     });
+function submitQuiz() {
+  let score = 0;
+  questions.forEach((item, index) => {
+    const selected = document.querySelector(`input[name="q${index}"]:checked`);
+    if (selected && selected.value === item.answer) {
+      score++;
+    }
+  });
 
   
 const age = parseInt(localStorage.getItem("userAge"), 10);
@@ -375,17 +383,6 @@ if (iqScoreSpan) {
       }
     }, 1000);
 
-    function startQuiz() {
-  const age = parseInt(document.getElementById("ageInput").value, 10);
-  if (!age || age < 13 || age > 100) {
-    alert("Please enter a valid age between 13 and 100.");
-    return;
-  }
-
-  localStorage.setItem("userAge", age);
-  document.getElementById("age-gate").style.display = "none";
-  document.getElementById("quiz-content").style.display = "block";
-}
   </script>
   <script src="https://gumroad.com/js/gumroad.js"></script>
 
