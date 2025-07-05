@@ -270,7 +270,22 @@ a.gumroad-button.cta-button:hover {
       score++;
     }
   });
-  const estimatedIQ = 80 + score * 2.5;
+  let baseIQ = 80 + score * 2.5;
+const age = parseInt(localStorage.getItem("userAge"), 10);
+
+// Optional: Slight correction curve based on age
+// (simulates typical cognitive performance arc — peaks ~age 25–35)
+if (age >= 13 && age <= 17) {
+  baseIQ -= 2;
+} else if (age >= 36 && age <= 49) {
+  baseIQ -= 2;
+} else if (age >= 50 && age <= 64) {
+  baseIQ -= 4;
+} else if (age >= 65) {
+  baseIQ -= 6;
+}
+
+const estimatedIQ = Math.max(70, Math.round(baseIQ)); // clamp min IQ to 70
 
   // Save to localStorage
   localStorage.setItem("iqScore", Math.round(estimatedIQ));
