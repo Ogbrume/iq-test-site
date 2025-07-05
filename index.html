@@ -196,7 +196,18 @@ a.gumroad-button.cta-button:hover {
       licensePopup.style.display = "block";
       licensePopup.scrollIntoView({ behavior: "smooth" });
 
-      function startQuiz() {
+      const resultBox = document.getElementById("result");
+      if (resultBox) {
+        resultBox.innerHTML = `
+          <p><strong>Welcome back!</strong> If you’ve already taken the test, enter your license key below to unlock your result.</p>
+          <p>If you haven’t taken the test yet, scroll up and complete it first.</p>
+        `;
+        resultBox.style.display = "block";
+      }
+    }
+  }
+});
+     function startQuiz() {
   const ageInput = document.getElementById("ageInput");
   const age = parseInt(ageInput.value.trim(), 10);
 
@@ -214,17 +225,6 @@ a.gumroad-button.cta-button:hover {
   document.getElementById("quiz-content").scrollIntoView({ behavior: "smooth" });
 }
 
-      const resultBox = document.getElementById("result");
-      if (resultBox) {
-        resultBox.innerHTML = `
-          <p><strong>Welcome back!</strong> If you’ve already taken the test, enter your license key below to unlock your result.</p>
-          <p>If you haven’t taken the test yet, scroll up and complete it first.</p>
-        `;
-        resultBox.style.display = "block";
-      }
-    }
-  }
-});
     const questions = [
       { q: "What comes next in the sequence: 3, 6, 12, 24, ?", options: ["30", "36", "48", "54"], answer: "48" },
       { q: "If some Smibs are Blibs and all Blibs are Cribs, are all Smibs definitely Cribs?", options: ["Yes", "No", "Cannot determine", "Only sometimes"], answer: "Cannot determine" },
@@ -280,24 +280,9 @@ a.gumroad-button.cta-button:hover {
       });
     });
 
-    // Submit logic
-    function submitQuiz() {
-  const age = parseInt(document.getElementById("age").value, 10);
-  if (isNaN(age) || age < 13 || age > 99) {
-    alert("Please enter a valid age between 13 and 99 before submitting.");
-    return;
-  }
-  localStorage.setItem("userAge", age);
-
-  let score = 0;
-  questions.forEach((item, i) => {
-    const selected = document.querySelector(`input[name=q${i}]:checked`);
-    if (selected && selected.value === item.answer) {
-      score++;
-    }
-  });
-  let baseIQ = 80 + score * 2.5;
+  
 const age = parseInt(localStorage.getItem("userAge"), 10);
+let baseIQ = 80 + score * 2.5;
 
 // Optional: Slight correction curve based on age
 // (simulates typical cognitive performance arc — peaks ~age 25–35)
