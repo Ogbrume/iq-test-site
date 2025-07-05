@@ -270,10 +270,12 @@ a.gumroad-button.cta-button:hover {
   </div>
     <div id="gumroad-purchase-section" style="margin-top: 1rem;">
       <p><strong>Want to unlock your full score?</strong></p>
-      <div style="display: flex; justify-content: center; padding: 0 0.5rem;">
-  <button id="custom-gumroad-btn" class="cta-button">
-    🔓 Unlock Your Score
-  </button>
+      <div style="padding: 0 0.5rem;">
+  <a class="gumroad-button cta-button"
+     href="https://digitallaunchco.gumroad.com/l/qifnj"
+     data-gumroad-single-product="true">
+     🔓 Unlock Your Score
+  </a>
 </div>
 
       <p style="margin-top: 0.75rem;">
@@ -334,39 +336,6 @@ if (iqScoreSpan) {
     }, 1000);
   </script>
   <script src="https://gumroad.com/js/gumroad.js"></script>
-
-  <script>
-  // Wait for the DOM *and* Gumroad script to be ready
-  document.addEventListener("DOMContentLoaded", function () {
-    const observer = new MutationObserver(() => {
-      const gumroadBtn = document.getElementById("custom-gumroad-btn");
-      if (gumroadBtn && typeof GumroadOverlay !== 'undefined') {
-        gumroadBtn.addEventListener("click", function () {
-          GumroadOverlay.open({
-            product_permalink: "qifnj",
-            offer_code: null
-          });
-        });
-        observer.disconnect(); // Stop watching once it binds
-      }
-    });
-
-    observer.observe(document.body, { childList: true, subtree: true });
-  });
-</script>
-
-  <script>
-  document.addEventListener("click", function(e) {
-    if (e.target.closest("#custom-gumroad-btn")) {
-      if (typeof GumroadOverlay !== 'undefined') {
-        GumroadOverlay.open({
-          product_permalink: "qifnj",
-          offer_code: null
-        });
-      }
-    }
-  });
-</script>
   
 </body>
 </html>
