@@ -340,27 +340,25 @@ if (iqScoreSpan) {
   <script src="https://gumroad.com/js/gumroad.js"></script>
 
   <script>
-  document.addEventListener("DOMContentLoaded", function () {
+  window.onload = function () {
     const btn = document.querySelector("a.gumroad-button");
 
     if (btn) {
-      // Prevent default Gumroad behavior
       btn.addEventListener("click", function (e) {
         e.preventDefault();
 
         if (typeof GumroadOverlay !== "undefined") {
           GumroadOverlay.open({
             product_permalink: "qifnj",
-            force_product: true, // ✅ forces direct checkout
+            force_product: true,
             quantity: 1
           });
         } else {
-          // fallback in case overlay isn't ready
           window.location.href = "https://digitallaunchco.gumroad.com/l/qifnj";
         }
       });
     }
-  });
+  };
 </script>
   
 </body>
