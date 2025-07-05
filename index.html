@@ -354,6 +354,19 @@ if (iqScoreSpan) {
     observer.observe(document.body, { childList: true, subtree: true });
   });
 </script>
+
+  <script>
+  document.addEventListener("click", function(e) {
+    if (e.target.closest("#custom-gumroad-btn")) {
+      if (typeof GumroadOverlay !== 'undefined') {
+        GumroadOverlay.open({
+          product_permalink: "qifnj",
+          offer_code: null
+        });
+      }
+    }
+  });
+</script>
   
 </body>
 </html>
