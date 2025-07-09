@@ -331,24 +331,23 @@ const estimatedIQ = Math.max(70, Math.round(baseIQ)); // clamp min IQ to 70
   resultBox.innerHTML = `
   <div id="score-section">
     <h2>Your Estimated IQ: <span class="blurred" aria-hidden="true"><span id="iq-score">${Math.round(estimatedIQ)}</span></span></h2>
-    <p>You got <span id="score">${score}</span> out of ${questions.length} correct.</p>
+    <p>You got <span class="blurred" aria-hidden="true"><span id="score">${score}</span></span> out of ${questions.length} correct.</p>
   </div>
-    <div id="gumroad-purchase-section" style="margin-top: 1rem;">
-      <div style="padding: 0 0.5rem;">
-  <p><strong>Want to unlock your full score?</strong> Just <strong>$4.99</strong> to reveal your complete IQ breakdown.</p>
-  <a class="gumroad-button cta-button"
-   href="https://gum.co/qifnj?wanted=true"
-   data-gumroad-single-product="true"
-   data-gumroad-button-custom>
-   🔓 Unlock Your Score
-</a>
-</div>
-
-      <p style="margin-top: 0.75rem;">
-        <a href="/unlock.html">Already have a license key?</a>
-      </p>
+  <div id="gumroad-purchase-section" style="margin-top: 1rem;">
+    <div style="padding: 0 0.5rem;">
+      <p><strong>Want to unlock your full score?</strong> Just <strong>$4.99</strong> to reveal your complete IQ breakdown.</p>
+      <a class="gumroad-button cta-button"
+         href="https://gum.co/qifnj?wanted=true"
+         data-gumroad-single-product="true"
+         data-gumroad-button-custom>
+         🔓 Unlock Your Score
+      </a>
     </div>
-  `;
+    <p style="margin-top: 0.75rem;">
+      <a href="/unlock.html">Already have a license key?</a>
+    </p>
+  </div>
+`;
 
   resultBox.style.display = "block";
   resultBox.scrollIntoView({ behavior: "smooth" });
