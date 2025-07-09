@@ -347,7 +347,29 @@ const estimatedIQ = Math.max(70, Math.round(baseIQ)); // clamp min IQ to 70
       <a href="/unlock.html">Already have a license key?</a>
     </p>
   </div>
+
+  <div id="social-proof-section" style="margin-top: 2rem;"></div>
 `;
+
+const testimonials = [
+  { text: "Honestly impressive. I'm prepping for my grad school exams and this gave me a solid IQ baseline.", name: "Sarah L., Psychology Student" },
+  { text: "I’ve taken paid IQ tests before and this came very close to the result. And it was way faster.", name: "James O., Software Developer" },
+  { text: "Fun, quick, and surprisingly accurate. Took less than 7 minutes and gave me some real insight.", name: "Amara T., UX Designer" }
+];
+
+const randomTestimonial = testimonials[Math.floor(Math.random() * testimonials.length)];
+
+const socialProof = `
+  <div class="testimonial" style="background: #f9fafb; padding: 1rem; border-radius: 8px;">
+    <p>“${randomTestimonial.text}”</p>
+    <p><strong>– ${randomTestimonial.name}</strong></p>
+  </div>
+  <p style="text-align: center; color: #4B5563; margin-top: 1rem;">
+    <strong>7,400+</strong> people have taken IQForge this month.
+  </p>
+`;
+
+document.getElementById("social-proof-section").innerHTML = socialProof;
 
   resultBox.style.display = "block";
   resultBox.scrollIntoView({ behavior: "smooth" });
