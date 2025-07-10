@@ -159,20 +159,54 @@ a.gumroad-button.cta-button:hover {
   display: flex;
   justify-content: center;
 }
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.5rem;
+  background-color: #0d0d0d;
+  border-bottom: 1px solid #222;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.logo {
+  height: 40px;
+  width: 40px;
+  border-radius: 8px;
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-name {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #00ffe5;
+}
+
+.tagline {
+  font-size: 0.75rem;
+  color: #aaa;
+}
   </style>
 </head>
 <body>
 
-  <header style="display: flex; align-items: center; justify-content: space-between; padding: 1rem 2rem; background: linear-gradient(to right, #111111, #1a1a1a); border-bottom: 1px solid #333; color: #e0e0e0;">
-  <div style="display: flex; align-items: center; gap: 1rem;">
-    <img src="coresignal-logo.png" alt="CoreSignalLabs Logo" style="height: 42px;">
-    <div>
-      <h1 style="margin: 0; font-size: 1.25rem; color: #0ff;">CoreSignalLabs</h1>
-      <p style="margin: 0; font-size: 0.9rem; color: #aaa;">Quiet Intelligence for a Cognitive Future</p>
+  <header class="topbar">
+  <div class="brand">
+    <img src="logo-light.png" alt="CoreSignalLabs Logo" class="logo">
+    <div class="brand-text">
+      <span class="brand-name">CoreSignalLabs</span>
+      <span class="tagline">Quiet Intelligence for a Cognitive Future</span>
     </div>
-  </div>
-  <div style="font-weight: 600; font-size: 1rem; color: #ccc;">
-    IQForge
   </div>
 </header>
   
