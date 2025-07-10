@@ -192,6 +192,16 @@ a.gumroad-button.cta-button:hover {
   max-height: 64px;
   object-fit: contain;
 }
+
+    #footer {
+  width: 100%;
+  text-align: center;
+  position: relative;
+  bottom: 0;
+  padding: 2rem 0;
+  color: #6B7280;
+  font-size: 0.9rem;
+}
   </style>
 </head>
 <body>
@@ -486,12 +496,11 @@ if (iqScoreSpan) {
   };
 </script>
 
-  <footer style="text-align: center; margin-top: 2rem; color: #6B7280; font-size: 0.9rem;">
+ <footer id="footer">
   © <span id="year"></span> CoreSignal Lab. All rights reserved.
 </footer>
-<script>
+  <script>
   document.getElementById("year").textContent = new Date().getFullYear();
 </script>
-  
 </body>
 </html>
