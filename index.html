@@ -240,7 +240,8 @@ a.gumroad-button.cta-button:hover {
 </div>   <!-- closes #quiz-content -->
 
   <script>
-
+let timer = null; // Declare the timer globally so we can clear it later
+    
     window.addEventListener("DOMContentLoaded", () => {
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get("unlocked") === "true") {
@@ -265,7 +266,7 @@ a.gumroad-button.cta-button:hover {
 document.getElementById("countdown").style.display = "block";
 let totalSeconds = 420;
 const countdownEl = document.getElementById("countdown");
-const timer = setInterval(() => {
+timer = setInterval(() => {
   const minutes = Math.floor(totalSeconds / 60);
   const seconds = totalSeconds % 60;
   countdownEl.textContent = `Time left: ${minutes}:${seconds.toString().padStart(2, '0')}`;
@@ -347,6 +348,8 @@ const timer = setInterval(() => {
       });
     });
 function submitQuiz() {
+  clearInterval(timer); // Stop the timer
+document.getElementById("countdown").style.display = "none"; // Hide the floating timer
   let score = 0;
   questions.forEach((item, index) => {
     const selected = document.querySelector(`input[name="q${index}"]:checked`);
