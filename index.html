@@ -349,6 +349,24 @@ timer = setInterval(() => {
   updateProgressBar();            // ✅ Keep this if you want to track progress
 }
 
+    function nextQuestion() {
+  const selected = document.querySelector(`input[name="q${currentQuestionIndex}"]:checked`);
+  if (!selected) {
+    alert("Please select an answer before proceeding.");
+    return;
+  }
+
+  // Save answer
+  localStorage.setItem("q" + currentQuestionIndex, selected.value);
+
+  currentQuestionIndex++;
+  if (currentQuestionIndex < questions.length) {
+    renderQuestion(currentQuestionIndex);
+  } else {
+    showSubmitScreen();
+  }
+}
+
     function skipQuestion() {
   // Save 'skipped' explicitly for tracking
   localStorage.setItem("q" + currentQuestionIndex, "No answer");
