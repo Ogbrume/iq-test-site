@@ -229,7 +229,6 @@ a.gumroad-button.cta-button:hover {
       <div class="progress-bar" id="progress-bar"></div>
     </div>
     <div id="quiz-container"></div>
-    <button id="submit-btn">Submit Answers</button>
     <div id="result"></div>
     <div id="license-key-container" style="display:none; margin-top: 2rem;">
   <p><strong>Thanks for your purchase!</strong> Enter your license key below to unlock your result.</p>
@@ -291,6 +290,7 @@ timer = setInterval(() => {
   document.getElementById("age-gate").style.display = "none";
   document.getElementById("quiz-content").style.display = "block";
   document.getElementById("quiz-content").scrollIntoView({ behavior: "smooth" });
+  renderQuestion(0);
 }
 
     const questions = [
@@ -322,38 +322,63 @@ timer = setInterval(() => {
     const progressBar = document.getElementById("progress-bar");
 
     // Render questions
-    questions.forEach((item, index) => {
-      const div = document.createElement("div");
-      div.classList.add("question");
-      div.innerHTML = `<p>${index + 1}. ${item.q}</p>` +
-        item.options.map(opt =>
-          `<label><input type="radio" name="q${index}" value="${opt}" /> ${opt}</label>`
-        ).join('');
-      quizContainer.appendChild(div);
-    });
+    let currentQuestionIndex = 0;
+    function updateProgressBar() {
+  const percent = ((currentQuestionIndex + 1) / questions.length) * 100;
+  progressBar.style.width = percent + "%";
+}
 
-    // Progress tracking
-    let answeredCount = 0;
-    questions.forEach((item, i) => {
-      const inputs = document.getElementsByName(`q${i}`);
-      inputs.forEach(input => {
-        input.addEventListener('change', () => {
-          const alreadyAnswered = [...inputs].some(r => r.dataset.answered === "true");
-          if (!alreadyAnswered) {
-            answeredCount++;
-            inputs.forEach(r => r.dataset.answered = "true");
-          }
-          progressBar.style.width = `${Math.round((answeredCount / questions.length) * 100)}%`;
-        });
-      });
-    });
+function renderQuestion(index) {
+  const q = questions[index];
+  let html = `<p>${index + 1}. ${q.q}</p>`;
+  q.options.forEach(opt => {
+    const saved = localStorage.getItem("q" + index);
+    const isChecked = saved === opt ? "checked" : "";
+    html += `<label><input type="radio" name="q${index}" value="${opt}" ${isChecked}> ${opt}</label>`;
+  });
+
+  html += `
+    <button onclick="nextQuestion()" style="margin-top: 1rem;">${index === questions.length - 1 ? "Finish" : "Next"}</button>
+  `;
+  updateProgressBar();
+  quizContainer.innerHTML = html;
+}
+
+    function nextQuestion() {
+  const selected = document.querySelector('input[name="q' + currentQuestionIndex + '"]:checked');
+  if (!selected) return alert("Please select an answer before continuing.");
+
+  localStorage.setItem("q" + currentQuestionIndex, selected.value);
+
+  currentQuestionIndex++;
+  if (currentQuestionIndex < questions.length) {
+    renderQuestion(currentQuestionIndex);
+  } else {
+    showSubmitScreen();
+  }
+}
+
+function showSubmitScreen() {
+  clearInterval(timer); // Stop timer
+  document.getElementById("countdown").style.display = "none";
+
+  let reviewHtml = '<h2>Review Your Answers</h2><ul>';
+  questions.forEach((q, i) => {
+    const saved = localStorage.getItem("q" + i) || "No answer";
+    reviewHtml += `<li><strong>Q${i + 1}:</strong> ${saved}</li>`;
+  });
+  reviewHtml += '</ul><button onclick="submitQuiz()">Submit Test</button>';
+  quizContainer.innerHTML = reviewHtml;
+}
+ 
 function submitQuiz() {
-  clearInterval(timer); // Stop the timer
-document.getElementById("countdown").style.display = "none"; // Hide the floating timer
+  clearInterval(timer);
+  document.getElementById("countdown").style.display = "none";
+
   let score = 0;
   questions.forEach((item, index) => {
-    const selected = document.querySelector(`input[name="q${index}"]:checked`);
-    if (selected && selected.value === item.answer) {
+    const selected = localStorage.getItem("q" + index);
+    if (selected === item.answer) {
       score++;
     }
   });
@@ -425,6 +450,9 @@ document.getElementById("social-proof-section").innerHTML = socialProof;
 
   resultBox.style.display = "block";
   resultBox.scrollIntoView({ behavior: "smooth" });
+  for (let i = 0; i < questions.length; i++) {
+  localStorage.removeItem("q" + i);
+}
 }
  function unlockScore() {
   const key = document.getElementById('licenseKey').value.trim();
@@ -458,7 +486,6 @@ if (iqScoreSpan) {
     .catch(() => alert("There was an error verifying your key. Please try again later."));
 }
     
-    submitBtn.onclick = submitQuiz;
 
     // Timer logic
     //let totalSeconds = 420;
@@ -497,6 +524,16 @@ if (iqScoreSpan) {
       });
     }
   };
+
+    if (localStorage.getItem("q0")) {
+  if (confirm("Resume your previous test?")) {
+    startQuiz();
+    renderQuestion(0);
+    updateProgressBar();
+  } else {
+    localStorage.clear();
+  }
+}
 </script>
 
  <footer id="footer">
