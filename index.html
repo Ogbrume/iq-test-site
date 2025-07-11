@@ -338,11 +338,10 @@ function renderQuestion(index) {
   });
 
   html += `
-  <div style="margin-top: 1rem; display: flex; gap: 0.75rem;">
-    <button onclick="nextQuestion()">Next</button>
-    <button onclick="skipQuestion()" style="background: #9CA3AF;">Skip</button>
-  </div>
-`;
+    <button onclick="nextQuestion()" style="margin-top: 1rem;">${index === questions.length - 1 ? "Finish" : "Next"}</button>
+  `;
+  updateProgressBar();
+  quizContainer.innerHTML = html;
 }
 
     function nextQuestion() {
@@ -359,37 +358,17 @@ function renderQuestion(index) {
   }
 }
 
-    function skipQuestion() {
-  // Save 'skipped' explicitly for tracking
-  localStorage.setItem("q" + currentQuestionIndex, "No answer");
-
-  currentQuestionIndex++;
-  if (currentQuestionIndex < questions.length) {
-    renderQuestion(currentQuestionIndex);
-  } else {
-    showSubmitScreen();
-  }
-}
-
 function showSubmitScreen() {
   clearInterval(timer); // Stop timer
   document.getElementById("countdown").style.display = "none";
 
-  let reviewHtml = '<h2>Review Your Answers</h2><ul style="list-style: none; padding-left: 0;">';
-questions.forEach((q, i) => {
-  const saved = localStorage.getItem("q" + i);
-  const userAnswer = saved ? saved : "No answer";
-  const isSkipped = !saved || userAnswer === "No answer";
-
-  reviewHtml += `
-    <li style="margin-bottom: 1.5rem;">
-      <p><strong>Q${i + 1}:</strong> ${q.q}</p>
-      <p><em>Your Answer:</em> <span style="color: ${isSkipped ? '#EF4444' : '#111827'};">${userAnswer}</span></p>
-    </li>
-  `;
-});
-reviewHtml += '</ul><button onclick="submitQuiz()">Submit Test</button>';
-quizContainer.innerHTML = reviewHtml;
+  let reviewHtml = '<h2>Review Your Answers</h2><ul>';
+  questions.forEach((q, i) => {
+    const saved = localStorage.getItem("q" + i) || "No answer";
+    reviewHtml += `<li><strong>Q${i + 1}:</strong> ${saved}</li>`;
+  });
+  reviewHtml += '</ul><button onclick="submitQuiz()">Submit Test</button>';
+  quizContainer.innerHTML = reviewHtml;
 }
  
 function submitQuiz() {
