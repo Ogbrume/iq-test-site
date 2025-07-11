@@ -328,23 +328,6 @@ timer = setInterval(() => {
   progressBar.style.width = percent + "%";
 }
 
-function renderQuestion(index) {
-  const q = questions[index];
-  let html = `<p>${index + 1}. ${q.q}</p>`;
-  q.options.forEach(opt => {
-    const saved = localStorage.getItem("q" + index);
-    const isChecked = saved === opt ? "checked" : "";
-    html += `<label><input type="radio" name="q${index}" value="${opt}" ${isChecked}> ${opt}</label>`;
-  });
-
-  html += `
-  <div style="margin-top: 1rem; display: flex; gap: 0.75rem;">
-    <button onclick="nextQuestion()">Next</button>
-    <button onclick="skipQuestion()" style="background: #9CA3AF;">Skip</button>
-  </div>
-`;
-}
-
     function renderQuestion(index) {
   const q = questions[index];
   let html = `<div class="question"><p>${index + 1}. ${q.q}</p>`;
