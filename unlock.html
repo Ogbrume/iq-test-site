@@ -166,7 +166,9 @@ button.textContent = "Verifying...";
   scoreDisplay.classList.add("show");
 
   // 🔥 Track Meta Pixel custom event
+  setTimeout(() => {
   fbq('trackCustom', 'UnlockSuccess');
+}, 200);
 
 // Animate the score from 0 to storedScore
 let current = 0;
