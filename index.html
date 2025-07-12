@@ -530,6 +530,10 @@ if (iqScoreSpan) {
   iqScoreSpan.classList.remove("blurred");
 }
 
+        if (typeof fbq !== "undefined") {
+    fbq('track', 'Purchase', { value: 2.99, currency: 'USD' });
+  }
+
         alert("Your result is now unlocked!");
 
         // Clean up UI regardless
